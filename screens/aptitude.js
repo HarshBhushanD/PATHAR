@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 
-export default function AptitudeScreen({ onBack }) {
+export default function AptitudeScreen() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
@@ -132,15 +132,7 @@ export default function AptitudeScreen({ onBack }) {
       <SafeAreaView className='flex-1 bg-white'>
         <StatusBar style="auto" />
         
-        {/* Back Button */}
-        <View className='px-6 pt-4 pb-2'>
-          <TouchableOpacity
-            onPress={onBack}
-            className='bg-gray-100 px-4 py-2 rounded-lg self-start flex-row items-center'
-          >
-            <Text className='text-gray-700 font-semibold'>← Back to Home</Text>
-          </TouchableOpacity>
-        </View>
+
 
         <ScrollView className='flex-1 px-6' contentContainerStyle={{ paddingBottom: 32 }}>
           <View className='py-8 bg-purple-500 -mx-6 px-6 mb-6'>
@@ -226,15 +218,7 @@ export default function AptitudeScreen({ onBack }) {
     <SafeAreaView className='flex-1 bg-white'>
       <StatusBar style="auto" />
       
-      {/* Back Button */}
-      <View className='px-6 pt-4 pb-2'>
-        <TouchableOpacity
-          onPress={onBack}
-          className='bg-gray-100 px-4 py-2 rounded-lg self-start flex-row items-center'
-        >
-          <Text className='text-gray-700 font-semibold'>← Back to Home</Text>
-        </TouchableOpacity>
-      </View>
+
 
       <View className='flex-1 px-6'>
         {/* Header */}

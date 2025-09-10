@@ -262,9 +262,11 @@ export const AuthProvider = ({ children }) => {
         createdAt: new Date().toISOString(),
       });
 
+
+
       return result.user;
     } catch (error) {
-      console.error("Signup error:", error);
+      // Re-throw the error so it can be handled by the component
       throw error;
     }
   };
@@ -284,7 +286,7 @@ export const AuthProvider = ({ children }) => {
 
       return result.user;
     } catch (error) {
-      console.error("Login error:", error);
+      // Re-throw the error so it can be handled by the component
       throw error;
     }
   };
@@ -295,7 +297,7 @@ export const AuthProvider = ({ children }) => {
       await signOut(auth);
       setUser(null);
     } catch (error) {
-      console.error("Logout error:", error);
+      // Re-throw the error so it can be handled by the component
       throw error;
     }
   };
@@ -312,7 +314,7 @@ export const AuthProvider = ({ children }) => {
             setUser(currentUser);
           }
         } catch (error) {
-          console.error("Error fetching user data:", error);
+          // If there's an error fetching user data, still set the basic user info
           setUser(currentUser);
         }
       } else {

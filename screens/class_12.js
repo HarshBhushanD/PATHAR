@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useAuth } from '../contexts/AuthContext';
 
-export default function Class12Screen({ onBack }) {
+export default function Class12Screen() {
   const onPrimaryCta = () => {
     Alert.alert('College Applications', 'Opening college application portal...');
   };
@@ -21,16 +22,6 @@ export default function Class12Screen({ onBack }) {
   return (
     <SafeAreaView className='flex-1 bg-white'>
       <StatusBar style="auto" />
-      
-      {/* Back Button */}
-      <View className='px-6 pt-4 pb-2'>
-        <TouchableOpacity
-          onPress={onBack}
-          className='bg-gray-100 px-4 py-2 rounded-lg self-start flex-row items-center'
-        >
-          <Text className='text-gray-700 font-semibold'>← Back to Home</Text>
-        </TouchableOpacity>
-      </View>
 
       <ScrollView className='flex-1' contentContainerStyle={{ paddingBottom: 32 }}>
         {/* Header */}

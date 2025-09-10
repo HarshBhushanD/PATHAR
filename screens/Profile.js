@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 
-export default function ProfileScreen({ onBack }) {
+export default function ProfileScreen() {
   const { user, logout } = useAuth();
 
   const handleLogout = () => {
@@ -38,17 +38,10 @@ export default function ProfileScreen({ onBack }) {
   return (
     <ScrollView className="flex-1 bg-background">
       <View className="px-6 py-8">
-        {/* Header */}
-        <View className="flex-row items-center justify-between mb-8">
-          <TouchableOpacity 
-            onPress={onBack}
-            className="bg-surface border border-primary/20 p-2 rounded-lg"
-            activeOpacity={0.85}
-          >
-            <Text className="text-textSecondary text-lg">← Back</Text>
-          </TouchableOpacity>
-          <Text className="text-2xl font-bold text-textPrimary">Profile</Text>
-          <View className="w-16" />
+                {/* Header */}
+        <View className="mb-8">
+          <Text className="text-3xl font-bold text-gray-800">Profile</Text>
+          <Text className="text-gray-600 mt-1">Manage your account settings</Text>
         </View>
 
         {/* User Info Card */}
