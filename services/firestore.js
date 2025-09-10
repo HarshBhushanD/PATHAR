@@ -88,8 +88,7 @@ export const getUserAptitudeResults = async (userId) => {
     const resultsRef = collection(db, 'aptitudeResults');
     const q = query(
       resultsRef, 
-      where('userId', '==', userId),
-      orderBy('createdAt', 'desc')
+      where('userId', '==', userId)
     );
     
     const querySnapshot = await getDocs(q);
@@ -99,7 +98,12 @@ export const getUserAptitudeResults = async (userId) => {
       results.push({ id: doc.id, ...doc.data() });
     });
     
-    return results;
+    // Sort by createdAt in descending order (newest first)
+    return results.sort((a, b) => {
+      const aTime = a.createdAt?.seconds || 0;
+      const bTime = b.createdAt?.seconds || 0;
+      return bTime - aTime;
+    });
   } catch (error) {
     console.error('Error getting aptitude results:', error);
     throw error;
@@ -154,8 +158,7 @@ export const getUserFavorites = async (userId) => {
     const favoritesRef = collection(db, 'favorites');
     const q = query(
       favoritesRef, 
-      where('userId', '==', userId),
-      orderBy('createdAt', 'desc')
+      where('userId', '==', userId)
     );
     
     const querySnapshot = await getDocs(q);
@@ -165,7 +168,12 @@ export const getUserFavorites = async (userId) => {
       favorites.push({ id: doc.id, ...doc.data() });
     });
     
-    return favorites;
+    // Sort by createdAt in descending order (newest first)
+    return favorites.sort((a, b) => {
+      const aTime = a.createdAt?.seconds || 0;
+      const bTime = b.createdAt?.seconds || 0;
+      return bTime - aTime;
+    });
   } catch (error) {
     console.error('Error getting user favorites:', error);
     throw error;
@@ -210,9 +218,7 @@ export const getUserSearchHistory = async (userId, limitCount = 10) => {
     const searchRef = collection(db, 'searchHistory');
     const q = query(
       searchRef,
-      where('userId', '==', userId),
-      orderBy('timestamp', 'desc'),
-      limit(limitCount)
+      where('userId', '==', userId)
     );
     
     const querySnapshot = await getDocs(q);
@@ -222,7 +228,14 @@ export const getUserSearchHistory = async (userId, limitCount = 10) => {
       history.push({ id: doc.id, ...doc.data() });
     });
     
-    return history;
+    // Sort by timestamp in descending order (newest first) and limit results
+    return history
+      .sort((a, b) => {
+        const aTime = a.timestamp?.seconds || 0;
+        const bTime = b.timestamp?.seconds || 0;
+        return bTime - aTime;
+      })
+      .slice(0, limitCount);
   } catch (error) {
     console.error('Error getting search history:', error);
     throw error;

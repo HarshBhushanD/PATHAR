@@ -212,7 +212,6 @@
 
 
 
-// src/contexts/AuthContext.js
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   signInWithEmailAndPassword,
@@ -269,7 +268,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Login existing user
   const login = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
