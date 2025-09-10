@@ -22,7 +22,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { saveAptitudeResults } from '../services/firestore';
 import { generateAptitudeQuestions, getDefaultQuestions, isPuterAvailable } from '../services/puterAI';
 
-export default function AptitudeScreen() {
+export default function Aptitude10Screen() {
   const { user } = useAuth();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -39,21 +39,21 @@ export default function AptitudeScreen() {
     try {
       setGeneratingQuestions(true);
       
-      // Try to generate questions with Puter AI
-      const aiQuestions = await generateAptitudeQuestions('12th', 10);
+      // Try to generate questions with Puter AI for Class 10th
+      const aiQuestions = await generateAptitudeQuestions('10th', 10);
       
       if (aiQuestions && aiQuestions.length === 10) {
         setQuestions(aiQuestions);
-        console.log('Successfully loaded AI-generated questions');
+        console.log('Successfully loaded AI-generated questions for Class 10th');
       } else {
         // Fallback to default questions
-        console.log('Using default questions as fallback');
-        setQuestions(getDefaultQuestions('12th'));
+        console.log('Using default Class 10th questions as fallback');
+        setQuestions(getDefaultQuestions('10th'));
       }
       
     } catch (error) {
-      console.log('Error generating questions:', error);
-      setQuestions(getDefaultQuestions('12th'));
+      console.log('Error generating Class 10th questions:', error);
+      setQuestions(getDefaultQuestions('10th'));
     } finally {
       setGeneratingQuestions(false);
       setLoading(false);
@@ -77,7 +77,7 @@ export default function AptitudeScreen() {
   };
 
   const calculateResults = async (finalAnswers) => {
-    const scores = { Engineering: 0, Medical: 0, Commerce: 0, Arts: 0 };
+    const scores = { Science: 0, Arts: 0, Commerce: 0, Vocational: 0 };
     
     Object.values(finalAnswers).forEach(answer => {
       scores[answer.category]++;
@@ -96,7 +96,7 @@ export default function AptitudeScreen() {
         await saveAptitudeResults(user.uid, {
           ...results,
           completedAt: new Date().toISOString(),
-          studentType: '12th',
+          studentType: '10th',
           answers: finalAnswers
         });
       } catch (error) {
@@ -121,32 +121,36 @@ export default function AptitudeScreen() {
 
   const getRecommendations = (category) => {
     const recommendations = {
-      Engineering: {
-        streams: ["Computer Science Engineering", "Mechanical Engineering", "Electrical Engineering", "Civil Engineering"],
-        exams: ["JEE Main", "JEE Advanced", "BITSAT", "VITEEE"],
-        careers: ["Software Engineer", "Data Scientist", "Mechanical Engineer", "Research Scientist"],
-        colleges: ["IITs", "NITs", "BITS Pilani", "Top Engineering Colleges"]
-      },
-      Medical: {
-        streams: ["MBBS", "BDS", "BAMS", "BHMS"],
-        exams: ["NEET UG", "AIIMS", "JIPMER", "State Medical Exams"],
-        careers: ["Doctor", "Surgeon", "Medical Researcher", "Healthcare Administrator"],
-        colleges: ["AIIMS", "Medical Colleges", "Dental Colleges", "Ayurveda Colleges"]
-      },
-      Commerce: {
-        streams: ["B.Com", "BBA", "Economics Honors", "CA Foundation"],
-        exams: ["DU Entrance", "IPM", "SET", "NPAT"],
-        careers: ["Chartered Accountant", "Investment Banker", "Business Analyst", "Entrepreneur"],
-        colleges: ["Delhi University", "Shri Ram College", "IIMs", "Business Schools"]
+      Science: {
+        streams: ["PCM (Physics, Chemistry, Math)", "PCB (Physics, Chemistry, Biology)", "PCMB (All Sciences)"],
+        subjects: ["Advanced Mathematics", "Physics", "Chemistry", "Biology"],
+        careers: ["Doctor", "Engineer", "Research Scientist", "Pharmacist", "Biotechnologist"],
+        colleges: ["Science Colleges", "Pre-Medical Colleges", "Engineering Prep Institutes"],
+        nextSteps: ["Focus on JEE/NEET preparation", "Strengthen Math and Science foundation", "Consider coaching institutes"]
       },
       Arts: {
-        streams: ["BA English", "BA History", "BA Psychology", "Mass Communication"],
-        exams: ["DU Entrance", "BHU UET", "DUET", "University Specific"],
-        careers: ["Civil Servant", "Journalist", "Teacher", "Content Creator"],
-        colleges: ["Delhi University", "JNU", "BHU", "Liberal Arts Colleges"]
+        streams: ["Humanities", "Social Sciences", "Languages", "Psychology"],
+        subjects: ["History", "Political Science", "Psychology", "English Literature", "Economics"],
+        careers: ["Civil Servant", "Teacher", "Journalist", "Lawyer", "Social Worker"],
+        colleges: ["Arts Colleges", "Liberal Arts Schools", "Government Colleges"],
+        nextSteps: ["Develop reading and writing skills", "Participate in debates and discussions", "Consider humanities coaching"]
+      },
+      Commerce: {
+        streams: ["Commerce with Math", "Commerce without Math", "Business Studies"],
+        subjects: ["Accountancy", "Business Studies", "Economics", "Mathematics"],
+        careers: ["Chartered Accountant", "Banker", "Business Manager", "Entrepreneur"],
+        colleges: ["Commerce Colleges", "Business Schools", "CA Prep Institutes"],
+        nextSteps: ["Learn basic accounting", "Understand business fundamentals", "Consider commerce coaching"]
+      },
+      Vocational: {
+        streams: ["Computer Applications", "Multimedia", "Fashion Design", "Hotel Management"],
+        subjects: ["Computer Science", "Graphic Design", "Web Development", "Digital Media"],
+        careers: ["Software Developer", "Graphic Designer", "Digital Marketer", "Technical Support"],
+        colleges: ["Technical Institutes", "Vocational Schools", "Skill Development Centers"],
+        nextSteps: ["Learn practical skills", "Get hands-on experience", "Consider certification courses"]
       }
     };
-    return recommendations[category] || recommendations.Engineering;
+    return recommendations[category] || recommendations.Science;
   };
 
   // Loading state
@@ -170,7 +174,7 @@ export default function AptitudeScreen() {
               className='text-purple-600 text-center mt-2'
               style={{ fontSize: isTablet() ? 14 : 12 }}
             >
-              🤖 AI-powered questions for better accuracy
+              🤖 AI-powered questions for Class 10th students
             </Text>
           )}
         </View>
@@ -192,7 +196,7 @@ export default function AptitudeScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View 
-            className='bg-purple-500 rounded-2xl mb-6'
+            className='bg-blue-500 rounded-2xl mb-6'
             style={{ 
               paddingVertical: isTablet() ? 40 : 32,
               paddingHorizontal: isTablet() ? 32 : 24,
@@ -204,28 +208,28 @@ export default function AptitudeScreen() {
               className='text-white font-extrabold mb-2'
               style={{ fontSize: isTablet() ? 36 : isLargePhone() ? 32 : 28 }}
             >
-              Your Class 12th Path!
+              Your Class 11th Path!
             </Text>
             <Text 
-              className='text-purple-100'
+              className='text-blue-100'
               style={{ fontSize: isTablet() ? 18 : 16 }}
             >
-              Based on your responses, here's your recommended college stream:
+              Based on your responses, here's your recommended 11th-12th stream:
             </Text>
           </View>
 
           <View 
-            className='bg-purple-50 border border-purple-200 rounded-xl mb-6'
+            className='bg-blue-50 border border-blue-200 rounded-xl mb-6'
             style={{ padding: isTablet() ? 24 : 20 }}
           >
             <Text 
-              className='font-bold text-purple-800 mb-2'
+              className='font-bold text-blue-800 mb-2'
               style={{ fontSize: isTablet() ? 28 : 24 }}
             >
               Best Match: {showResults.topCategory}
             </Text>
             <Text 
-              className='text-purple-600'
+              className='text-blue-600'
               style={{ fontSize: isTablet() ? 16 : 14 }}
             >
               You scored {showResults.scores[showResults.topCategory]}/{showResults.totalQuestions} points in {showResults.topCategory}, showing strong alignment with this field.
@@ -258,7 +262,7 @@ export default function AptitudeScreen() {
                       <View
                         key={i}
                         className={`rounded-full mr-1 ${
-                          i < score ? 'bg-purple-500' : 'bg-gray-200'
+                          i < score ? 'bg-blue-500' : 'bg-gray-200'
                         }`}
                         style={{ 
                           width: isTablet() ? 12 : 10,
@@ -283,19 +287,19 @@ export default function AptitudeScreen() {
               className='font-bold mb-4'
               style={{ fontSize: isTablet() ? 24 : 20 }}
             >
-              Recommended Courses
+              Recommended Streams for 11th-12th
             </Text>
             <View className={isTablet() ? 'flex-row flex-wrap -mx-2' : 'space-y-2'}>
               {recommendations.streams.map((stream, index) => (
                 <View 
                   key={index} 
-                  className={`bg-blue-50 border border-blue-200 rounded-xl ${
+                  className={`bg-green-50 border border-green-200 rounded-xl ${
                     isTablet() ? 'w-1/2 px-2 mb-3' : 'mb-2'
                   }`}
                   style={{ padding: isTablet() ? 16 : 12 }}
                 >
                   <Text 
-                    className='text-blue-800 font-medium'
+                    className='text-green-800 font-medium'
                     style={{ fontSize: isTablet() ? 15 : 14 }}
                   >
                     • {stream}
@@ -310,22 +314,22 @@ export default function AptitudeScreen() {
               className='font-bold mb-4'
               style={{ fontSize: isTablet() ? 24 : 20 }}
             >
-              Entrance Exams to Focus On
+              Key Subjects to Focus On
             </Text>
             <View className={isTablet() ? 'flex-row flex-wrap -mx-2' : 'space-y-2'}>
-              {recommendations.exams.map((exam, index) => (
+              {recommendations.subjects.map((subject, index) => (
                 <View 
                   key={index} 
-                  className={`bg-orange-50 border border-orange-200 rounded-xl ${
+                  className={`bg-purple-50 border border-purple-200 rounded-xl ${
                     isTablet() ? 'w-1/2 px-2 mb-3' : 'mb-2'
                   }`}
                   style={{ padding: isTablet() ? 16 : 12 }}
                 >
                   <Text 
-                    className='text-orange-800 font-medium'
+                    className='text-purple-800 font-medium'
                     style={{ fontSize: isTablet() ? 15 : 14 }}
                   >
-                    • {exam}
+                    • {subject}
                   </Text>
                 </View>
               ))}
@@ -337,19 +341,19 @@ export default function AptitudeScreen() {
               className='font-bold mb-4'
               style={{ fontSize: isTablet() ? 24 : 20 }}
             >
-              Career Opportunities
+              Future Career Possibilities
             </Text>
             <View className={isTablet() ? 'flex-row flex-wrap -mx-2' : 'space-y-2'}>
               {recommendations.careers.map((career, index) => (
                 <View 
                   key={index} 
-                  className={`bg-green-50 border border-green-200 rounded-xl ${
+                  className={`bg-orange-50 border border-orange-200 rounded-xl ${
                     isTablet() ? 'w-1/2 px-2 mb-3' : 'mb-2'
                   }`}
                   style={{ padding: isTablet() ? 16 : 12 }}
                 >
                   <Text 
-                    className='text-green-800 font-medium'
+                    className='text-orange-800 font-medium'
                     style={{ fontSize: isTablet() ? 15 : 14 }}
                   >
                     • {career}
@@ -359,12 +363,12 @@ export default function AptitudeScreen() {
             </View>
           </View>
 
-          <View className='mb-8'>
+          <View className='mb-6'>
             <Text 
               className='font-bold mb-4'
               style={{ fontSize: isTablet() ? 24 : 20 }}
             >
-              Top Colleges to Target
+              Recommended Colleges/Institutes
             </Text>
             <View className={isTablet() ? 'flex-row flex-wrap -mx-2' : 'space-y-2'}>
               {recommendations.colleges.map((college, index) => (
@@ -386,10 +390,37 @@ export default function AptitudeScreen() {
             </View>
           </View>
 
+          <View className='mb-8'>
+            <Text 
+              className='font-bold mb-4'
+              style={{ fontSize: isTablet() ? 24 : 20 }}
+            >
+              Next Steps & Action Plan
+            </Text>
+            <View className={isTablet() ? 'flex-row flex-wrap -mx-2' : 'space-y-2'}>
+              {recommendations.nextSteps.map((step, index) => (
+                <View 
+                  key={index} 
+                  className={`bg-indigo-50 border border-indigo-200 rounded-xl ${
+                    isTablet() ? 'w-full px-2 mb-3' : 'mb-2'
+                  }`}
+                  style={{ padding: isTablet() ? 16 : 12 }}
+                >
+                  <Text 
+                    className='text-indigo-800 font-medium'
+                    style={{ fontSize: isTablet() ? 15 : 14 }}
+                  >
+                    {index + 1}. {step}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
           <View className={`${isTablet() ? 'flex-row justify-center space-x-4' : 'space-y-3'}`}>
             <TouchableOpacity
               onPress={resetQuiz}
-              className={`bg-purple-500 rounded-xl shadow-lg ${
+              className={`bg-blue-500 rounded-xl shadow-lg ${
                 isTablet() ? 'px-8' : 'w-full'
               }`}
               style={{ 
@@ -426,8 +457,8 @@ export default function AptitudeScreen() {
             </TouchableOpacity>
             
             <TouchableOpacity
-              onPress={() => Alert.alert('College Search', 'Opening college search based on your results...')}
-              className={`bg-blue-500 rounded-xl shadow-lg ${
+              onPress={() => Alert.alert('Stream Guide', 'Opening detailed stream selection guide...')}
+              className={`bg-purple-500 rounded-xl shadow-lg ${
                 isTablet() ? 'px-8' : 'w-full'
               }`}
               style={{ 
@@ -440,7 +471,7 @@ export default function AptitudeScreen() {
                 className='text-white font-semibold text-center'
                 style={{ fontSize: isTablet() ? 16 : 14 }}
               >
-                Find Colleges
+                Stream Guide
               </Text>
             </TouchableOpacity>
           </View>
@@ -461,7 +492,7 @@ export default function AptitudeScreen() {
           <Text className='text-gray-600 text-center'>Error loading questions. Please try again.</Text>
           <TouchableOpacity
             onPress={regenerateQuestions}
-            className='bg-purple-500 rounded-xl mt-4 px-6 py-3'
+            className='bg-blue-500 rounded-xl mt-4 px-6 py-3'
           >
             <Text className='text-white font-semibold'>Retry</Text>
           </TouchableOpacity>
@@ -489,10 +520,10 @@ export default function AptitudeScreen() {
             className='font-extrabold text-center mb-2'
             style={{ fontSize: isTablet() ? 32 : 24 }}
           >
-            Class 12th Stream Selector
+            Class 10th Stream Selector
           </Text>
           <Text 
-            className='text-purple-600 text-center mb-2'
+            className='text-blue-600 text-center mb-2'
             style={{ fontSize: isTablet() ? 16 : 14 }}
           >
             AI-Powered Aptitude Test
@@ -501,13 +532,13 @@ export default function AptitudeScreen() {
             className='text-gray-600 text-center mb-6'
             style={{ fontSize: isTablet() ? 18 : 16 }}
           >
-            Find your perfect college stream and career path
+            Discover your ideal stream for 11th-12th grades
           </Text>
           
           {/* Progress Bar */}
           <View className='bg-gray-200 rounded-full h-3 mb-2'>
             <View 
-              className='bg-purple-500 h-3 rounded-full transition-all duration-300'
+              className='bg-blue-500 h-3 rounded-full transition-all duration-300'
               style={{ width: `${progress}%` }}
             />
           </View>
@@ -544,7 +575,7 @@ export default function AptitudeScreen() {
               <TouchableOpacity
                 key={index}
                 onPress={() => handleAnswer(option)}
-                className='bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:bg-purple-50 hover:border-purple-300 transition-all duration-200'
+                className='bg-gray-50 border-2 border-gray-200 rounded-xl p-4 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200'
                 style={{ 
                   paddingVertical: isTablet() ? 20 : 16,
                   paddingHorizontal: isTablet() ? 24 : 16,

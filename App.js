@@ -15,6 +15,7 @@ import Class12Screen from './screens/class_12';
 import CollegesScreen from './screens/colleges';
 import CollegeStudentScreen from './screens/CollegeStudent';
 import AptitudeScreen from './screens/aptitude';
+import Aptitude10Screen from './screens/aptitude10';
 import AuthScreen from './screens/Auth';
 import ProfileScreen from './screens/Profile';
 
@@ -83,13 +84,28 @@ function AppContent() {
     }
   };
 
+  // Render appropriate aptitude screen based on user type
+  const renderAptitudeScreen = () => {
+    const userScreen = getUserScreen();
+    switch (userScreen) {
+      case 'class10':
+        return <Aptitude10Screen />;
+      case 'class12':
+        return <AptitudeScreen />;
+      case 'collegeStudent':
+        return <AptitudeScreen />; // Use class 12th version for college students
+      default:
+        return <Aptitude10Screen />;
+    }
+  };
+
   // Render screens for authenticated users
   const renderScreen = () => {
     switch (currentScreen) {
       case 'home':
         return renderUserTypeScreen();
       case 'aptitude':
-        return <AptitudeScreen />;
+        return renderAptitudeScreen();
       case 'colleges':
         return <CollegesScreen />;
       case 'profile':
@@ -104,13 +120,13 @@ function AppContent() {
     const userScreen = getUserScreen();
     switch (userScreen) {
       case 'class10':
-        return <Class10Screen />;
+        return <Class10Screen onNavigate={handleNavigation} />;
       case 'class12':
-        return <Class12Screen />;
+        return <Class12Screen onNavigate={handleNavigation} />;
       case 'collegeStudent':
-        return <CollegeStudentScreen />;
+        return <CollegeStudentScreen onNavigate={handleNavigation} />;
       default:
-        return <Class10Screen />;
+        return <Class10Screen onNavigate={handleNavigation} />;
     }
   };
 

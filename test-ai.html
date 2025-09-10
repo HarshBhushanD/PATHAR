@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PATHAR AI Test</title>
+    <script src="https://js.puter.com/v2/"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8fafc;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #8b5cf6;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #7c3aed;
+        }
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #f3f4f6;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .loading {
+            color: #6b7280;
+            font-style: italic;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status.available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status.unavailable {
+            background: #fef3c7;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 PATHAR AI Integration Test</h1>
+        <p>This page tests the Puter.js AI integration for generating aptitude test questions.</p>
+        
+        <div id="status" class="status">
+            Checking AI availability...
+        </div>
+        
+        <h2>Test Controls</h2>
+        <button onclick="testPuterConnection()">Test Basic AI Connection</button>
+        <button onclick="generateSampleQuestions()">Generate Sample Questions</button>
+        <button onclick="testErrorHandling()">Test Error Handling</button>
+        <button onclick="clearResults()">Clear Results</button>
+        
+        <h2>Results</h2>
+        <div id="results" class="result">
+            Click a test button to see results...
+        </div>
+    </div>
+
+    <script>
+        let isLoading = false;
+
+        // Check AI availability on load
+        window.addEventListener('load', function() {
+            setTimeout(checkAIAvailability, 1000); // Give Puter time to load
+        });
+
+        function checkAIAvailability() {
+            const statusEl = document.getElementById('status');
+            
+            if (window.puter && window.puter.ai) {
+                statusEl.textContent = '✅ Puter AI is available and ready!';
+                statusEl.className = 'status available';
+            } else {
+                statusEl.textContent = '⚠️ Puter AI is not available. Questions will use fallback system.';
+                statusEl.className = 'status unavailable';
+            }
+        }
+
+        function updateResults(content, type = 'info') {
+            const resultsEl = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = `[${timestamp}] `;
+            
+            resultsEl.textContent = prefix + content;
+            resultsEl.className = `result ${type}`;
+        }
+
+        function setLoading(loading) {
+            isLoading = loading;
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                if (btn.textContent !== 'Clear Results') {
+                    btn.disabled = loading;
+                }
+            });
+        }
+
+        async function testPuterConnection() {
+            setLoading(true);
+            updateResults('Testing basic AI connection...', 'loading');
+
+            try {
+                if (!window.puter || !window.puter.ai) {
+                    updateResults('❌ Puter AI not available. Using fallback mode.', 'error');
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await window.puter.ai.chat(
+                    'Hello! Please respond with just "AI connection successful" to confirm you can communicate.',
+                    false,
+                    {
+                        model: 'gpt-3.5-turbo',
+                        temperature: 0.3
+                    }
+                );
+
+                if (response && response.message) {
+                    updateResults(`✅ AI Connection Test Successful!\n\nResponse: ${response.message}`, 'success');
+                } else {
+                    updateResults('❌ AI connection failed - no valid response received.', 'error');
+                }
+            } catch (error) {
+                updateResults(`❌ AI Connection Error:\n${error.message || error}`, 'error');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function generateSampleQuestions() {
+            setLoading(true);
+            updateResults('Generating sample aptitude questions for Class 12th students...', 'loading');
+
+            try {
+                if (!window.puter || !window.puter.ai) {
+                    updateResults('❌ AI not available. Would use fallback questions in real app.', 'error');
+                    setLoading(false);
+                    return;
+                }
+
+                const prompt = `Generate exactly 3 aptitude test questions for Class 12th students in India who are choosing their college stream. Each question should help determine if they're suited for Engineering, Medical, Commerce, or Arts streams.
+
+IMPORTANT: Return ONLY a valid JSON array with this exact structure:
+[
+  {
+    "id": 1,
+    "question": "Question text ending with a question mark?",
+    "options": [
+      { "text": "Option 1 text", "category": "Engineering" },
+      { "text": "Option 2 text", "category": "Medical" },
+      { "text": "Option 3 text", "category": "Commerce" },
+      { "text": "Option 4 text", "category": "Arts" }
+    ]
+  }
+]
+
+Requirements:
+- Exactly 3 questions
+- Each question must have exactly 4 options
+- Each option must belong to one of the 4 categories
+- Questions should be relevant to Indian Class 12th students
+- Focus on post-12th career planning
+
+Return only the JSON array, no additional text.`;
+
+                const response = await window.puter.ai.chat(prompt, false, {
+                    model: 'gpt-4',
+                    temperature: 0.7,
+                    max_tokens: 2000
+                });
+
+                if (response && response.message) {
+                    try {
+                        // Extract JSON from response
+                        let jsonText = response.message.trim();
+                        jsonText = jsonText.replace(/```json\s*/, '').replace(/```\s*$/, '');
+                        
+                        const jsonMatch = jsonText.match(/\[[\s\S]*\]/);
+                        if (jsonMatch) {
+                            const questions = JSON.parse(jsonMatch[0]);
+                            
+                            if (Array.isArray(questions) && questions.length === 3) {
+                                updateResults(`✅ Successfully generated ${questions.length} questions!\n\n${JSON.stringify(questions, null, 2)}`, 'success');
+                            } else {
+                                updateResults(`⚠️ Generated questions but got ${questions?.length || 0} instead of 3:\n\n${JSON.stringify(questions, null, 2)}`, 'error');
+                            }
+                        } else {
+                            updateResults(`❌ Could not extract JSON from response:\n\n${response.message}`, 'error');
+                        }
+                    } catch (parseError) {
+                        updateResults(`❌ JSON parsing error:\n${parseError.message}\n\nRaw response:\n${response.message}`, 'error');
+                    }
+                } else {
+                    updateResults('❌ No valid response received from AI.', 'error');
+                }
+            } catch (error) {
+                updateResults(`❌ Question Generation Error:\n${error.message || error}`, 'error');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function testErrorHandling() {
+            setLoading(true);
+            updateResults('Testing error handling with invalid prompt...', 'loading');
+
+            try {
+                if (!window.puter || !window.puter.ai) {
+                    updateResults('✅ Error handling test passed - AI not available, would use fallback.', 'success');
+                    setLoading(false);
+                    return;
+                }
+
+                // Intentionally cause an error with an invalid model
+                const response = await window.puter.ai.chat(
+                    'This is a test of error handling.',
+                    false,
+                    {
+                        model: 'invalid-model-name',
+                        temperature: 0.5
+                    }
+                );
+
+                updateResults(`⚠️ Expected error but got response:\n${JSON.stringify(response, null, 2)}`, 'error');
+            } catch (error) {
+                updateResults(`✅ Error handling test passed!\n\nCaught expected error: ${error.message || error}`, 'success');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('results').textContent = 'Results cleared. Click a test button to see new results...';
+            document.getElementById('results').className = 'result';
+        }
+    </script>
+</body>
+</html> 

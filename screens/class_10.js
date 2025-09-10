@@ -11,59 +11,113 @@ import {
   View,
 } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
+import { 
+  wp, 
+  hp, 
+  isTablet, 
+  isLargePhone, 
+  getContainerPadding, 
+  getHeroHeight,
+  responsiveFont 
+} from '../utils/responsive';
 
-export default function Class10Screen() {
+export default function Class10Screen({ onNavigate }) {
   const { user } = useAuth();
 
   const onPrimaryCta = () => {
-    Alert.alert('Aptitude Quiz', 'Launching the interest & aptitude quiz...');
+    if (onNavigate) {
+      onNavigate('aptitude');
+    } else {
+      Alert.alert('Aptitude Quiz', 'Launching the interest & aptitude quiz...');
+    }
   };
 
   const onSecondaryCta = () => {
     Alert.alert('Nearby Colleges', 'Showing government colleges near you...');
   };
 
+  const containerPadding = getContainerPadding();
+  const heroHeight = getHeroHeight();
+
   return (
     <SafeAreaView className='flex-1 bg-white'>
       <StatusBar style="light" />
 
-      <ScrollView className='flex-1' contentContainerStyle={{ paddingBottom: 32 }}>
+      <ScrollView 
+        className='flex-1' 
+        contentContainerStyle={{ paddingBottom: isTablet() ? 48 : 32 }}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Hero Section */}
         <View className='relative'>
           <ImageBackground
             source={require('../assets/splash-icon.png')}
             resizeMode='cover'
             className='w-full'
-            style={{ height: 280 }}
+            style={{ height: heroHeight }}
           >
             <View className='absolute inset-0 bg-black/40' />
-            <View className='px-6 pt-10'>
+            <View style={{ paddingHorizontal: containerPadding, paddingTop: isTablet() ? 60 : 40 }}>
               <View className='flex-row items-center'>
-                <Image source={require('../assets/icon.png')} className='w-10 h-10 rounded-lg mr-3' />
-                <Text className='text-white text-2xl font-extrabold tracking-tight'>
+                <Image 
+                  source={require('../assets/icon.png')} 
+                  className={`${isTablet() ? 'w-12 h-12' : 'w-10 h-10'} rounded-lg mr-3`} 
+                />
+                <Text 
+                  className='text-white font-extrabold tracking-tight'
+                  style={{ fontSize: isTablet() ? 28 : isLargePhone() ? 24 : 20 }}
+                >
                   PATHAR - Class 10
                 </Text>
               </View>
-              <View className='mt-6'>
-                <Text className='text-white text-3xl font-extrabold leading-tight'>
+              <View className={`${isTablet() ? 'mt-8' : 'mt-6'}`}>
+                <Text 
+                  className='text-white font-extrabold leading-tight'
+                  style={{ 
+                    fontSize: isTablet() ? 36 : isLargePhone() ? 32 : 28,
+                    maxWidth: isTablet() ? wp(70) : '100%'
+                  }}
+                >
                   Your Career Journey Starts Here
                 </Text>
-                <Text className='text-white/90 mt-2 text-base'>
+                <Text 
+                  className='text-white/90 mt-2'
+                  style={{ 
+                    fontSize: isTablet() ? 18 : isLargePhone() ? 16 : 15,
+                    maxWidth: isTablet() ? wp(65) : '100%'
+                  }}
+                >
                   Explore streams and career paths after completing Class 10 in Jammu & Kashmir.
                 </Text>
               </View>
-              <View className='mt-5 flex-row'>
+              <View className={`${isTablet() ? 'mt-8' : 'mt-5'} ${isTablet() ? 'flex-row' : 'flex-col'}`}>
                 <TouchableOpacity
                   onPress={onPrimaryCta}
-                  className='bg-emerald-500 px-4 py-3 rounded-xl mr-3 shadow-lg shadow-emerald-800/30'
+                  className={`bg-emerald-500 rounded-xl shadow-lg shadow-emerald-800/30 ${
+                    isTablet() ? 'px-6 py-4 mr-4' : 'px-4 py-3 mb-3'
+                  }`}
+                  style={{ minHeight: isTablet() ? 52 : 44 }}
                 >
-                  <Text className='text-white font-semibold'>Start Aptitude Quiz</Text>
+                  <Text 
+                    className='text-white font-semibold text-center'
+                    style={{ fontSize: isTablet() ? 16 : 14 }}
+                  >
+                    Start Aptitude Quiz
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={onSecondaryCta}
-                  className='bg-white/90 px-4 py-3 rounded-xl'
+                  className={`bg-white/90 rounded-xl ${
+                    isTablet() ? 'px-6 py-4' : 'px-4 py-3'
+                  }`}
+                  style={{ minHeight: isTablet() ? 52 : 44 }}
                 >
-                  <Text className='text-emerald-700 font-semibold'>Colleges Near Me</Text>
+                  <Text 
+                    className='text-emerald-700 font-semibold text-center'
+                    style={{ fontSize: isTablet() ? 16 : 14 }}
+                  >
+                    Colleges Near Me
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -71,34 +125,39 @@ export default function Class10Screen() {
         </View>
 
         {/* Impact badges */}
-        <View className='px-6 -mt-6'>
-          <View className='bg-white rounded-2xl p-4 shadow-md shadow-black/10 border border-black/5'>
-            <View className='flex-row justify-between'>
+        <View style={{ paddingHorizontal: containerPadding, marginTop: -24 }}>
+          <View className='bg-white rounded-2xl shadow-md shadow-black/10 border border-black/5' style={{ padding: isTablet() ? 24 : 16 }}>
+            <View className={`flex-row justify-between ${isTablet() ? 'px-4' : ''}`}>
               <View className='items-center flex-1'>
-                <Text className='text-2xl font-extrabold text-emerald-600'>↑</Text>
-                <Text className='text-base font-semibold'>Enrollment</Text>
-                <Text className='text-xs text-gray-500'>Informed choices</Text>
+                <Text style={{ fontSize: isTablet() ? 32 : 24 }} className='font-extrabold text-emerald-600'>↑</Text>
+                <Text style={{ fontSize: isTablet() ? 18 : 16 }} className='font-semibold'>Enrollment</Text>
+                <Text style={{ fontSize: isTablet() ? 14 : 12 }} className='text-gray-500'>Informed choices</Text>
               </View>
               <View className='w-px bg-gray-200 mx-3' />
               <View className='items-center flex-1'>
-                <Text className='text-2xl font-extrabold text-emerald-600'>✓</Text>
-                <Text className='text-base font-semibold'>Retention</Text>
-                <Text className='text-xs text-gray-500'>Fewer dropouts</Text>
+                <Text style={{ fontSize: isTablet() ? 32 : 24 }} className='font-extrabold text-emerald-600'>✓</Text>
+                <Text style={{ fontSize: isTablet() ? 18 : 16 }} className='font-semibold'>Retention</Text>
+                <Text style={{ fontSize: isTablet() ? 14 : 12 }} className='text-gray-500'>Fewer dropouts</Text>
               </View>
               <View className='w-px bg-gray-200 mx-3' />
               <View className='items-center flex-1'>
-                <Text className='text-2xl font-extrabold text-emerald-600'>🎯</Text>
-                <Text className='text-base font-semibold'>Outcomes</Text>
-                <Text className='text-xs text-gray-500'>Career‑aligned</Text>
+                <Text style={{ fontSize: isTablet() ? 32 : 24 }} className='font-extrabold text-emerald-600'>🎯</Text>
+                <Text style={{ fontSize: isTablet() ? 18 : 16 }} className='font-semibold'>Outcomes</Text>
+                <Text style={{ fontSize: isTablet() ? 14 : 12 }} className='text-gray-500'>Career‑aligned</Text>
               </View>
             </View>
           </View>
         </View>
 
         {/* Features grid */}
-        <View className='px-6 mt-8'>
-          <Text className='text-xl font-extrabold'>Explore Features</Text>
-          <View className='mt-4 flex-row flex-wrap -mx-2'>
+        <View style={{ paddingHorizontal: containerPadding, marginTop: isTablet() ? 32 : 24 }}>
+          <Text 
+            className='font-extrabold'
+            style={{ fontSize: isTablet() ? 24 : 20 }}
+          >
+            Explore Features
+          </Text>
+          <View className={`mt-4 flex-row flex-wrap ${isTablet() ? '-mx-3' : '-mx-2'}`}>
             <FeatureCard
               emoji='🧭'
               title='Aptitude & Interest'
@@ -127,38 +186,88 @@ export default function Class10Screen() {
         </View>
 
         {/* Quick actions */}
-        <View className='px-6 mt-6'>
-          <View className='bg-gray-900 rounded-2xl p-5'>
-            <Text className='text-white text-lg font-bold'>Get Personalized Recommendations</Text>
-            <Text className='text-white/80 mt-1 text-sm'>
+        <View style={{ paddingHorizontal: containerPadding, marginTop: isTablet() ? 32 : 24 }}>
+          <View className='bg-gray-900 rounded-2xl' style={{ padding: isTablet() ? 24 : 20 }}>
+            <Text 
+              className='text-white font-bold'
+              style={{ fontSize: isTablet() ? 22 : 18 }}
+            >
+              Get Personalized Recommendations
+            </Text>
+            <Text 
+              className='text-white/80 mt-1'
+              style={{ fontSize: isTablet() ? 16 : 14 }}
+            >
               Create your profile to unlock tailored courses, colleges, and study materials.
             </Text>
-            <View className='mt-4 flex-row'>
-              <TouchableOpacity onPress={() => Alert.alert('Create Profile')}
-                className='bg-white px-4 py-3 rounded-xl mr-3'>
-                <Text className='text-gray-900 font-semibold'>Create Profile</Text>
+            <View className={`mt-4 ${isTablet() ? 'flex-row' : 'flex-col'}`}>
+              <TouchableOpacity 
+                onPress={() => Alert.alert('Create Profile')}
+                className={`bg-white rounded-xl ${
+                  isTablet() ? 'px-6 py-4 mr-4' : 'px-4 py-3 mb-3'
+                }`}
+                style={{ minHeight: isTablet() ? 52 : 44 }}
+              >
+                <Text 
+                  className='text-gray-900 font-semibold text-center'
+                  style={{ fontSize: isTablet() ? 16 : 14 }}
+                >
+                  Create Profile
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => Alert.alert('Sign In')}
-                className='bg-transparent border border-white/40 px-4 py-3 rounded-xl'>
-                <Text className='text-white font-semibold'>Sign In</Text>
+              <TouchableOpacity 
+                onPress={() => Alert.alert('Sign In')}
+                className={`bg-transparent border border-white/40 rounded-xl ${
+                  isTablet() ? 'px-6 py-4' : 'px-4 py-3'
+                }`}
+                style={{ minHeight: isTablet() ? 52 : 44 }}
+              >
+                <Text 
+                  className='text-white font-semibold text-center'
+                  style={{ fontSize: isTablet() ? 16 : 14 }}
+                >
+                  Sign In
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
 
         {/* Streams carousel (chips) */}
-        <View className='mt-6'>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} className='px-6'>
+        <View className={`${isTablet() ? 'mt-8' : 'mt-6'}`}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            style={{ paddingLeft: containerPadding }}
+            contentContainerStyle={{ paddingRight: containerPadding }}
+          >
             {[
               { label: 'Science', desc: 'Physics, Chemistry, Biology/Math' },
               { label: 'Commerce', desc: 'Accounts, Economics, Business Studies' },
               { label: 'Arts', desc: 'History, Geography, Political Science' },
               { label: 'Vocational', desc: 'Skill‑based programs' },
             ].map((item) => (
-              <View key={item.label} className='mr-3'>
-                <View className='bg-white border border-gray-200 rounded-2xl px-4 py-3'>
-                  <Text className='font-semibold'>{item.label}</Text>
-                  <Text className='text-xs text-gray-500 mt-0.5'>{item.desc}</Text>
+              <View key={item.label} className={isTablet() ? 'mr-4' : 'mr-3'}>
+                <View 
+                  className='bg-white border border-gray-200 rounded-2xl'
+                  style={{ 
+                    paddingHorizontal: isTablet() ? 20 : 16,
+                    paddingVertical: isTablet() ? 16 : 12,
+                    minWidth: isTablet() ? 200 : 160
+                  }}
+                >
+                  <Text 
+                    className='font-semibold'
+                    style={{ fontSize: isTablet() ? 16 : 14 }}
+                  >
+                    {item.label}
+                  </Text>
+                  <Text 
+                    className='text-gray-500 mt-0.5'
+                    style={{ fontSize: isTablet() ? 13 : 12 }}
+                  >
+                    {item.desc}
+                  </Text>
                 </View>
               </View>
             ))}
@@ -166,11 +275,17 @@ export default function Class10Screen() {
         </View>
 
         {/* Footer */}
-        <View className='px-6 mt-8 mb-4'>
-          <Text className='text-gray-700 font-semibold'>
+        <View style={{ paddingHorizontal: containerPadding, marginTop: isTablet() ? 40 : 32, marginBottom: 16 }}>
+          <Text 
+            className='text-gray-700 font-semibold'
+            style={{ fontSize: isTablet() ? 16 : 14 }}
+          >
             Government of Jammu & Kashmir — Higher Education Department
           </Text>
-          <Text className='text-gray-500 text-sm mt-1'>
+          <Text 
+            className='text-gray-500 mt-1'
+            style={{ fontSize: isTablet() ? 14 : 12 }}
+          >
             Smart Education Initiative • Digital Guidance Platform
           </Text>
         </View>
@@ -180,12 +295,31 @@ export default function Class10Screen() {
 }
 
 function FeatureCard({ emoji, title, subtitle, color }) {
+  const cardWidth = isTablet() ? '33.33%' : '50%';
+  const cardPadding = isTablet() ? 12 : 8;
+  
   return (
-    <View className='w-1/2 px-2 mb-4'>
-      <View className={`rounded-2xl p-4 ${color} border border-black/5`}>
-        <Text className='text-2xl'>{emoji}</Text>
-        <Text className='mt-2 font-bold'>{title}</Text>
-        <Text className='text-xs text-gray-600 mt-1'>{subtitle}</Text>
+    <View 
+      className={isTablet() ? 'px-3 mb-6' : 'px-2 mb-4'}
+      style={{ width: cardWidth }}
+    >
+      <View 
+        className={`rounded-2xl ${color} border border-black/5`}
+        style={{ padding: isTablet() ? 20 : 16 }}
+      >
+        <Text style={{ fontSize: isTablet() ? 32 : 24 }}>{emoji}</Text>
+        <Text 
+          className='mt-2 font-bold'
+          style={{ fontSize: isTablet() ? 16 : 14 }}
+        >
+          {title}
+        </Text>
+        <Text 
+          className='text-gray-600 mt-1'
+          style={{ fontSize: isTablet() ? 13 : 12 }}
+        >
+          {subtitle}
+        </Text>
       </View>
     </View>
   );
