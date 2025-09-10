@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="PATHAR - Your Path to Success" />
+    
+    <title>PATHAR - Your Path to Success</title>
+    
+    <!-- Puter.js CDN - AI Integration -->
+    <script src="https://js.puter.com/v2/"></script>
+    
+    <!-- Expo Web Assets -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #ffffff;
+        }
+        
+        #root {
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Loading styles */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8fafc;
+        }
+        
+        .loading-text {
+            color: #6b7280;
+            font-size: 16px;
+            margin-top: 16px;
+        }
+        
+        .spinner {
+            border: 3px solid #e5e7eb;
+            border-top: 3px solid #8b5cf6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+        <!-- Loading screen while app initializes -->
+        <div class="loading-container">
+            <div>
+                <div class="spinner"></div>
+                <div class="loading-text">Loading PATHAR...</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize Puter when the page loads
+        window.addEventListener('load', function() {
+            console.log('Puter.js loaded:', typeof window.puter !== 'undefined');
+            
+            if (window.puter) {
+                console.log('Puter AI available for question generation');
+                
+                // Test Puter availability
+                window.puterTest = async function() {
+                    try {
+                        const response = await window.puter.ai.chat('Hello! Can you generate a simple test response?', false, {
+                            model: 'gpt-3.5-turbo',
+                            temperature: 0.5
+                        });
+                        console.log('Puter test response:', response);
+                        return response;
+                    } catch (error) {
+                        console.error('Puter test failed:', error);
+                        return null;
+                    }
+                };
+            } else {
+                console.warn('Puter.js not available - AI features will use fallback questions');
+            }
+        });
+        
+        // Global error handler for AI operations
+        window.handleAIError = function(error, fallbackAction) {
+            console.error('AI Operation Error:', error);
+            if (typeof fallbackAction === 'function') {
+                fallbackAction();
+            }
+        };
+        
+        // Utility function to check AI availability
+        window.isAIAvailable = function() {
+            return window.puter && window.puter.ai && typeof window.puter.ai.chat === 'function';
+        };
+    </script>
+</body>
+</html> 

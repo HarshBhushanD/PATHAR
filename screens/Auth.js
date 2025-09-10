@@ -13,6 +13,15 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { 
+  wp, 
+  hp, 
+  isTablet, 
+  isLargePhone, 
+  getContainerPadding, 
+  getModalWidth,
+  getButtonHeight 
+} from '../utils/responsive';
 
 export default function AuthScreen() {
   const [currentView, setCurrentView] = useState('login');
@@ -36,6 +45,10 @@ export default function AuthScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const { login, signup } = useAuth();
+
+  const containerPadding = getContainerPadding();
+  const modalWidth = getModalWidth();
+  const buttonHeight = getButtonHeight();
 
   // Auto-close modal and let AuthContext handle redirection
   useEffect(() => {
@@ -190,50 +203,100 @@ export default function AuthScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       className="flex-1 bg-gray-50"
     >
-      <ScrollView className="flex-1 mt-20" showsVerticalScrollIndicator={false}>
-        <View className="px-4 py-8">
+      <ScrollView 
+        className="flex-1" 
+        style={{ marginTop: isTablet() ? 60 : 40 }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ 
+          paddingHorizontal: containerPadding,
+          paddingVertical: isTablet() ? 40 : 32,
+          alignItems: isTablet() ? 'center' : 'stretch'
+        }}
+      >
+        <View style={{ width: isTablet() ? modalWidth : '100%', maxWidth: 480 }}>
           {/* Header */}
           <View className="items-center mb-8">
-            <View className="w-16 h-16 bg-blue-500 rounded-full items-center justify-center mb-4 shadow-lg">
-              <Ionicons name="school" size={32} color="white" />
+            <View 
+              className="bg-blue-500 rounded-full items-center justify-center mb-4 shadow-lg"
+              style={{ 
+                width: isTablet() ? 80 : 64,
+                height: isTablet() ? 80 : 64
+              }}
+            >
+              <Ionicons 
+                name="school" 
+                size={isTablet() ? 40 : 32} 
+                color="white" 
+              />
             </View>
-            <Text className="text-4xl font-bold text-gray-800 text-center mb-2">
+            <Text 
+              className="font-bold text-gray-800 text-center mb-2"
+              style={{ fontSize: isTablet() ? 42 : isLargePhone() ? 36 : 32 }}
+            >
               One-Stop Advisor
             </Text>
-            <Text className="text-lg text-gray-600 text-center">
+            <Text 
+              className="text-gray-600 text-center"
+              style={{ fontSize: isTablet() ? 20 : 18 }}
+            >
               Your academic journey starts here
             </Text>
           </View>
 
           {/* Error Message */}
           {error ? (
-            <View className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <View 
+              className="mb-6 bg-red-50 border border-red-200 rounded-xl"
+              style={{ padding: isTablet() ? 20 : 16 }}
+            >
               <View className="flex-row items-center">
                 <View className="w-6 h-6 bg-red-500 rounded-full items-center justify-center mr-3">
                   <Text className="text-white text-xs font-bold">!</Text>
                 </View>
-                <Text className="text-red-700 flex-1 text-sm leading-5">{error}</Text>
+                <Text 
+                  className="text-red-700 flex-1 leading-5"
+                  style={{ fontSize: isTablet() ? 15 : 14 }}
+                >
+                  {error}
+                </Text>
               </View>
             </View>
           ) : null}
 
           {/* Toggle Buttons */}
-          <View className="flex-row bg-white rounded-xl p-2 mb-8 shadow-lg">
+          <View 
+            className="flex-row bg-white rounded-xl mb-8 shadow-lg"
+            style={{ padding: isTablet() ? 3 : 2 }}
+          >
             <TouchableOpacity
               onPress={() => { setCurrentView('login'); setError(''); }}
-              className={`flex-1 py-4 px-6 rounded-lg ${currentView === 'login' ? 'bg-blue-500' : 'bg-transparent'}`}
+              className={`flex-1 rounded-lg ${currentView === 'login' ? 'bg-blue-500' : 'bg-transparent'}`}
+              style={{ 
+                paddingVertical: isTablet() ? 16 : 12,
+                paddingHorizontal: isTablet() ? 24 : 16
+              }}
               disabled={loading}
             >
-              <Text className={`font-semibold text-center ${currentView === 'login' ? 'text-white' : 'text-gray-600'}`}>
+              <Text 
+                className={`font-semibold text-center ${currentView === 'login' ? 'text-white' : 'text-gray-600'}`}
+                style={{ fontSize: isTablet() ? 16 : 14 }}
+              >
                 Login
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => { setCurrentView('signup'); setError(''); }}
-              className={`flex-1 py-4 px-6 rounded-lg ${currentView === 'signup' ? 'bg-blue-500' : 'bg-transparent'}`}
+              className={`flex-1 rounded-lg ${currentView === 'signup' ? 'bg-blue-500' : 'bg-transparent'}`}
+              style={{ 
+                paddingVertical: isTablet() ? 16 : 12,
+                paddingHorizontal: isTablet() ? 24 : 16
+              }}
               disabled={loading}
             >
-              <Text className={`font-semibold text-center ${currentView === 'signup' ? 'text-white' : 'text-gray-600'}`}>
+              <Text 
+                className={`font-semibold text-center ${currentView === 'signup' ? 'text-white' : 'text-gray-600'}`}
+                style={{ fontSize: isTablet() ? 16 : 14 }}
+              >
                 Sign Up
               </Text>
             </TouchableOpacity>
@@ -241,8 +304,14 @@ export default function AuthScreen() {
 
           {/* Login Form */}
           {currentView === 'login' && (
-            <View className="bg-white rounded-2xl p-8 shadow-xl">
-              <Text className="text-3xl font-bold text-center text-gray-800 mb-8">
+            <View 
+              className="bg-white rounded-2xl shadow-xl"
+              style={{ padding: isTablet() ? 32 : 24 }}
+            >
+              <Text 
+                className="font-bold text-center text-gray-800 mb-8"
+                style={{ fontSize: isTablet() ? 36 : 28 }}
+              >
                 Welcome Back!
               </Text>
 
@@ -256,7 +325,11 @@ export default function AuthScreen() {
                   onChangeText={setEmail}
                   placeholder="Email address"
                   keyboardType="email-address"
-                  className="bg-gray-100 border border-gray-300 rounded-xl pl-12 pr-4 py-4 text-gray-800"
+                  className="bg-gray-100 border border-gray-300 rounded-xl pl-12 pr-4 text-gray-800"
+                  style={{ 
+                    paddingVertical: isTablet() ? 16 : 12,
+                    fontSize: isTablet() ? 16 : 14
+                  }}
                   placeholderTextColor="#9E9E9E"
                   editable={!loading}
                 />
@@ -269,7 +342,11 @@ export default function AuthScreen() {
                   onChangeText={setPassword}
                   placeholder="Password"
                   secureTextEntry={!showPassword}
-                  className="bg-gray-100 border border-gray-300 rounded-xl pl-4 pr-12 py-4 text-gray-800"
+                  className="bg-gray-100 border border-gray-300 rounded-xl pl-4 pr-12 text-gray-800"
+                  style={{ 
+                    paddingVertical: isTablet() ? 16 : 12,
+                    fontSize: isTablet() ? 16 : 14
+                  }}
                   placeholderTextColor="#9E9E9E"
                   editable={!loading}
                 />
@@ -289,7 +366,12 @@ export default function AuthScreen() {
               <TouchableOpacity
                 onPress={handleLogin}
                 disabled={loading}
-                className={`py-4 px-6 rounded-xl shadow-lg ${loading ? 'bg-gray-400' : 'bg-blue-500'}`}
+                className={`rounded-xl shadow-lg ${loading ? 'bg-gray-400' : 'bg-blue-500'}`}
+                style={{ 
+                  paddingVertical: isTablet() ? 16 : 12,
+                  paddingHorizontal: isTablet() ? 24 : 16,
+                  minHeight: buttonHeight
+                }}
               >
                 {loading ? (
                   <View className="flex-row items-center justify-center">

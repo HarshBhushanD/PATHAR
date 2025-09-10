@@ -1,6 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { 
+  isTablet, 
+  isLargePhone, 
+  getContainerPadding 
+} from '../utils/responsive';
 
 export default function BottomNavigation({ currentScreen, onNavigate, user }) {
   const navItems = [
@@ -41,10 +46,25 @@ export default function BottomNavigation({ currentScreen, onNavigate, user }) {
   };
 
   const primaryScreen = getUserPrimaryScreen();
+  const containerPadding = getContainerPadding();
 
   return (
-    <View className='bg-white border-t border-gray-200 px-4 py-2'>
-      <View className='flex-row justify-around items-center'>
+    <View 
+      className='bg-white border-t border-gray-200'
+      style={{ 
+        paddingHorizontal: containerPadding,
+        paddingVertical: isTablet() ? 12 : 8,
+        paddingBottom: isTablet() ? 12 : 8 + 8, // Extra padding for safe area on phones
+      }}
+    >
+      <View 
+        className={`flex-row ${isTablet() ? 'justify-center' : 'justify-around'} items-center`}
+        style={{ 
+          maxWidth: isTablet() ? 600 : '100%',
+          alignSelf: 'center',
+          width: '100%'
+        }}
+      >
         {navItems.map((item) => {
           const isActive = currentScreen === item.id;
           const isPrimary = item.id === primaryScreen;
@@ -53,31 +73,42 @@ export default function BottomNavigation({ currentScreen, onNavigate, user }) {
             <TouchableOpacity
               key={item.id}
               onPress={() => onNavigate(item.id)}
-              className={`items-center py-2 px-3 rounded-lg ${
+              className={`items-center rounded-lg ${
                 isActive ? 'bg-gray-100' : ''
               }`}
+              style={{ 
+                paddingVertical: isTablet() ? 12 : 8,
+                paddingHorizontal: isTablet() ? 16 : 12,
+                minWidth: isTablet() ? 100 : 60,
+                marginHorizontal: isTablet() ? 8 : 0,
+                flex: isTablet() ? 0 : 1,
+              }}
               activeOpacity={0.7}
             >
-              <View className='relative'>
+              <View className='relative items-center'>
                 <Ionicons
                   name={isActive ? item.activeIcon : item.icon}
-                  size={24}
+                  size={isTablet() ? 28 : isLargePhone() ? 26 : 24}
                   color={isActive ? item.color : '#9CA3AF'}
                 />
                 {/* Show a small dot for user's primary screen */}
                 {isPrimary && !isActive && (
                   <View 
-                    className='absolute -top-1 -right-1 w-2 h-2 rounded-full'
+                    className={`absolute ${isTablet() ? '-top-1 -right-1 w-3 h-3' : '-top-1 -right-1 w-2 h-2'} rounded-full`}
                     style={{ backgroundColor: item.color }}
                   />
                 )}
               </View>
               <Text
-                className={`text-xs mt-1 font-medium ${
+                className={`font-medium ${
                   isActive 
                     ? 'text-gray-800' 
                     : 'text-gray-500'
-                }`}
+                } ${isTablet() ? 'mt-2' : 'mt-1'}`}
+                style={{ 
+                  fontSize: isTablet() ? 14 : isLargePhone() ? 12 : 11,
+                  textAlign: 'center'
+                }}
               >
                 {item.label}
               </Text>
