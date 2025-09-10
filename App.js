@@ -1,187 +1,172 @@
 import { StatusBar } from 'expo-status-bar';
 import './global.css';
+import React, { useState } from 'react';
 import {
-  Alert,
-  Image,
-  ImageBackground,
   SafeAreaView,
-  ScrollView,
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 
-export default function App() {
-  const onPrimaryCta = () => {
-    Alert.alert('Aptitude Quiz', 'Launching the interest & aptitude quiz...');
-  };
+// Import screens
+import Class10Screen from './screens/class_10';
+import Class12Screen from './screens/class_12';
+import CollegesScreen from './screens/colleges';
+import AptitudeScreen from './screens/aptitude';
+import AuthScreen from './screens/Auth';
+import ProfileScreen from './screens/Profile';
 
-  const onSecondaryCta = () => {
-    Alert.alert('Nearby Colleges', 'Showing government colleges near you...');
+// Import Auth Context
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+
+function AppContent() {
+  const [currentScreen, setCurrentScreen] = useState('home');
+  const { user, loading } = useAuth();
+
+  // Show loading spinner while checking auth state
+  if (loading) {
+    return (
+      <SafeAreaView className='flex-1 bg-background justify-center items-center'>
+        <ActivityIndicator size="large" color="#1E88E5" />
+        <Text className="text-textSecondary mt-4">Loading...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  // Show auth screen if user is not logged in
+  if (!user) {
+    return (
+      <SafeAreaView className='flex-1 bg-background'>
+        <StatusBar style="auto" />
+        <AuthScreen />
+      </SafeAreaView>
+    );
+  }
+
+  // Render screens for authenticated users
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case 'class10':
+        return <Class10Screen onBack={() => setCurrentScreen('home')} />;
+      case 'class12':
+        return <Class12Screen onBack={() => setCurrentScreen('home')} />;
+      case 'colleges':
+        return <CollegesScreen onBack={() => setCurrentScreen('home')} />;
+      case 'aptitude':
+        return <AptitudeScreen onBack={() => setCurrentScreen('home')} />;
+      case 'profile':
+        return <ProfileScreen onBack={() => setCurrentScreen('home')} />;
+      default:
+        return <HomeScreen onNavigate={setCurrentScreen} user={user} />;
+    }
   };
 
   return (
-    <SafeAreaView className='flex-1 bg-white'>
-      <StatusBar style="light" />
-      <ScrollView className='flex-1' contentContainerStyle={{ paddingBottom: 32 }}>
-        {/* Hero Section */}
-        <View className='relative'>
-          <ImageBackground
-            source={require('./assets/splash-icon.png')}
-            resizeMode='cover'
-            className='w-full'
-            style={{ height: 280 }}
-          >
-            <View className='absolute inset-0 bg-black/40' />
-            <View className='px-6 pt-10'>
-              <View className='flex-row items-center'>
-                <Image source={require('./assets/icon.png')} className='w-10 h-10 rounded-lg mr-3' />
-                <Text className='text-white text-2xl font-extrabold tracking-tight'>
-                  PATHAR
-                </Text>
-              </View>
-              <View className='mt-6'>
-                <Text className='text-white text-3xl font-extrabold leading-tight'>
-                  Your Personalized Career & College Guide
-                </Text>
-                <Text className='text-white/90 mt-2 text-base'>
-                  Built for students in Jammu & Kashmir to make confident post‑10th & 12th decisions.
-                </Text>
-              </View>
-              <View className='mt-5 flex-row'>
-                <TouchableOpacity
-                  onPress={onPrimaryCta}
-                  className='bg-emerald-500 px-4 py-3 rounded-xl mr-3 shadow-lg shadow-emerald-800/30'
-                >
-                  <Text className='text-white font-semibold'>Start Aptitude Quiz</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={onSecondaryCta}
-                  className='bg-white/90 px-4 py-3 rounded-xl'
-                >
-                  <Text className='text-emerald-700 font-semibold'>Colleges Near Me</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ImageBackground>
-        </View>
-
-        {/* Impact badges */}
-        <View className='px-6 -mt-6'>
-          <View className='bg-white rounded-2xl p-4 shadow-md shadow-black/10 border border-black/5'>
-            <View className='flex-row justify-between'>
-              <View className='items-center flex-1'>
-                <Text className='text-2xl font-extrabold text-emerald-600'>↑</Text>
-                <Text className='text-base font-semibold'>Enrollment</Text>
-                <Text className='text-xs text-gray-500'>Informed choices</Text>
-              </View>
-              <View className='w-px bg-gray-200 mx-3' />
-              <View className='items-center flex-1'>
-                <Text className='text-2xl font-extrabold text-emerald-600'>✓</Text>
-                <Text className='text-base font-semibold'>Retention</Text>
-                <Text className='text-xs text-gray-500'>Fewer dropouts</Text>
-              </View>
-              <View className='w-px bg-gray-200 mx-3' />
-              <View className='items-center flex-1'>
-                <Text className='text-2xl font-extrabold text-emerald-600'>🎯</Text>
-                <Text className='text-base font-semibold'>Outcomes</Text>
-                <Text className='text-xs text-gray-500'>Career‑aligned</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        {/* Features grid */}
-        <View className='px-6 mt-8'>
-          <Text className='text-xl font-extrabold'>Explore Features</Text>
-          <View className='mt-4 flex-row flex-wrap -mx-2'>
-            <FeatureCard
-              emoji='🧭'
-              title='Aptitude & Interest'
-              subtitle='Short quiz to discover the right stream'
-              color='bg-emerald-50'
-            />
-            <FeatureCard
-              emoji='🗺️'
-              title='Course → Career Map'
-              subtitle='See jobs, exams, higher studies for each degree'
-              color='bg-sky-50'
-            />
-            <FeatureCard
-              emoji='🏫'
-              title='Nearby Govt. Colleges'
-              subtitle='Programs, cut‑offs, facilities, medium'
-              color='bg-amber-50'
-            />
-            <FeatureCard
-              emoji='⏰'
-              title='Timeline Tracker'
-              subtitle='Admissions, scholarships, tests — never miss a date'
-              color='bg-rose-50'
-            />
-          </View>
-        </View>
-
-        {/* Quick actions */}
-        <View className='px-6 mt-6'>
-          <View className='bg-gray-900 rounded-2xl p-5'>
-            <Text className='text-white text-lg font-bold'>Get Personalized Recommendations</Text>
-            <Text className='text-white/80 mt-1 text-sm'>
-              Create your profile to unlock tailored courses, colleges, and study materials.
-            </Text>
-            <View className='mt-4 flex-row'>
-              <TouchableOpacity onPress={() => Alert.alert('Create Profile')}
-                className='bg-white px-4 py-3 rounded-xl mr-3'>
-                <Text className='text-gray-900 font-semibold'>Create Profile</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => Alert.alert('Sign In')}
-                className='bg-transparent border border-white/40 px-4 py-3 rounded-xl'>
-                <Text className='text-white font-semibold'>Sign In</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-
-        {/* Streams carousel (chips) */}
-        <View className='mt-6'>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} className='px-6'>
-            {[
-              { label: 'Arts', desc: 'B.A., BFA, Social Sciences' },
-              { label: 'Science', desc: 'B.Sc., Nursing, IT' },
-              { label: 'Commerce', desc: 'B.Com., BBA, Finance' },
-              { label: 'Vocational', desc: 'Skill‑based programs' },
-            ].map((item) => (
-              <View key={item.label} className='mr-3'>
-                <View className='bg-white border border-gray-200 rounded-2xl px-4 py-3'>
-                  <Text className='font-semibold'>{item.label}</Text>
-                  <Text className='text-xs text-gray-500 mt-0.5'>{item.desc}</Text>
-                </View>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
-
-        {/* Footer */}
-        <View className='px-6 mt-8 mb-4'>
-          <Text className='text-gray-700 font-semibold'>
-            Government of Jammu & Kashmir — Higher Education Department
-          </Text>
-          <Text className='text-gray-500 text-sm mt-1'>
-            Smart Education Initiative • Digital Guidance Platform
-          </Text>
-        </View>
-      </ScrollView>
+    <SafeAreaView className='flex-1 bg-background'>
+      <StatusBar style="auto" />
+      {renderScreen()}
     </SafeAreaView>
   );
 }
 
-function FeatureCard({ emoji, title, subtitle, color }) {
+export default function App() {
   return (
-    <View className='w-1/2 px-2 mb-4'>
-      <View className={`rounded-2xl p-4 ${color} border border-black/5`}>
-        <Text className='text-2xl'>{emoji}</Text>
-        <Text className='mt-2 font-bold'>{title}</Text>
-        <Text className='text-xs text-gray-600 mt-1'>{subtitle}</Text>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
+
+function HomeScreen({ onNavigate, user }) {
+  return (
+    <View className='flex-1 justify-center items-center px-6 bg-background'>
+      {/* Header with Profile Button */}
+      <View className='absolute top-12 right-6 z-10'>
+        <TouchableOpacity
+          onPress={() => onNavigate('profile')}
+          className='bg-primary w-12 h-12 rounded-full items-center justify-center shadow-lg'
+          activeOpacity={0.8}
+        >
+          <Text className='text-white text-lg font-bold'>
+            {user?.displayName?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase()}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View className='items-center mb-12'>
+        <Text className='text-4xl font-extrabold text-primary mb-2'>
+          PATHAR
+        </Text>
+        <Text className='text-lg text-textPrimary text-center'>
+          Your One-Stop Advisor for Careers & Colleges
+        </Text>
+        <Text className='text-sm text-textSecondary text-center mt-2'>
+          Built for students in Jammu & Kashmir
+        </Text>
+      </View>
+
+      <View className='w-full space-y-4'>
+        <TouchableOpacity
+          onPress={() => onNavigate('class10')}
+          className='bg-primary py-4 px-6 rounded-xl shadow-lg active:bg-secondary'
+          activeOpacity={0.85}
+        >
+          <Text className='text-white text-lg font-semibold text-center'>
+            Class 10 Students
+          </Text>
+          <Text className='text-white/80 text-sm text-center mt-1'>
+            Explore career options after 10th
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => onNavigate('class12')}
+          className='bg-primary py-4 px-6 rounded-xl shadow-lg active:bg-secondary'
+          activeOpacity={0.85}
+        >
+          <Text className='text-white text-lg font-semibold text-center'>
+            Class 12 Students
+          </Text>
+          <Text className='text-white/80 text-sm text-center mt-1'>
+            College and career guidance
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => onNavigate('colleges')}
+          className='bg-primary py-4 px-6 rounded-xl shadow-lg active:bg-secondary'
+          activeOpacity={0.85}
+        >
+          <Text className='text-white text-lg font-semibold text-center'>
+            Browse Colleges
+          </Text>
+          <Text className='text-white/80 text-sm text-center mt-1'>
+            Find government colleges nearby
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => onNavigate('aptitude')}
+          className='bg-primary py-4 px-6 rounded-xl shadow-lg active:bg-secondary'
+          activeOpacity={0.85}
+        >
+          <Text className='text-white text-lg font-semibold text-center'>
+            Aptitude Test
+          </Text>
+          <Text className='text-white/80 text-sm text-center mt-1'>
+            Discover your interests and strengths
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View className='mt-12'>
+        <Text className='text-textSecondary text-xs text-center'>
+          Government of Jammu & Kashmir
+        </Text>
+        <Text className='text-textSecondary text-xs text-center'>
+          Higher Education Department
+        </Text>
       </View>
     </View>
   );
