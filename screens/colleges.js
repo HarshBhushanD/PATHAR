@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-export default function CollegesScreen({ onBack }) {
+export default function CollegesScreen() {
   const colleges = [
     {
       name: 'University of Kashmir',
@@ -59,37 +59,29 @@ export default function CollegesScreen({ onBack }) {
     <SafeAreaView className='flex-1 bg-white'>
       <StatusBar style="auto" />
       
-      {/* Back Button */}
-      <View className='px-6 pt-4 pb-2'>
-        <TouchableOpacity
-          onPress={onBack}
-          className='bg-gray-100 px-4 py-2 rounded-lg self-start flex-row items-center'
-        >
-          <Text className='text-gray-700 font-semibold'>← Back to Home</Text>
-        </TouchableOpacity>
-      </View>
+
 
       <ScrollView className='flex-1' contentContainerStyle={{ paddingBottom: 32 }}>
         {/* Header */}
-        <View className='px-6 py-8 bg-amber-500'>
+        <View className='px-6 py-8 bg-emerald-500'>
           <Text className='text-white text-3xl font-extrabold mb-2'>
-            Government Colleges
+            Career Map
           </Text>
-          <Text className='text-amber-100 text-base'>
-            Explore top government colleges in Jammu & Kashmir
+          <Text className='text-emerald-100 text-base'>
+            Discover career paths, colleges, and opportunities
           </Text>
         </View>
 
         {/* Filter Options */}
         <View className='px-6 mt-6'>
-          <Text className='text-lg font-bold mb-3'>Filter by Type</Text>
+          <Text className='text-lg font-bold mb-3'>Explore by Field</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {['All', 'Universities', 'Engineering', 'Medical', 'Arts & Science'].map((filter) => (
+            {['All', 'Technology', 'Medical', 'Business', 'Arts & Design', 'Science'].map((filter) => (
               <TouchableOpacity
                 key={filter}
-                className='bg-amber-100 border border-amber-300 px-4 py-2 rounded-lg mr-3'
+                className='bg-emerald-100 border border-emerald-300 px-4 py-2 rounded-lg mr-3'
               >
-                <Text className='text-amber-800 font-semibold'>{filter}</Text>
+                <Text className='text-emerald-700 font-medium'>{filter}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
