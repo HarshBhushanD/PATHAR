@@ -21,12 +21,17 @@ import {
   responsiveFont 
 } from '../utils/responsive';
 import { useState } from 'react';
+import { stateCollegesData, stateSchoolsData, scholarshipData } from '../data/collegeData';
 
 export default function CareerMappingScreen({ onNavigate }) {
   const { user } = useAuth();
   const [selectedStream, setSelectedStream] = useState(null);
   const [selectedCareer, setSelectedCareer] = useState(null);
   const [showCareerDetails, setShowCareerDetails] = useState(false);
+  const [selectedState, setSelectedState] = useState(null);
+  const [showStateColleges, setShowStateColleges] = useState(false);
+  const [showScholarships, setShowScholarships] = useState(false);
+  const [currentView, setCurrentView] = useState('main'); // 'main', 'streams', 'colleges', 'scholarships'
 
   const containerPadding = getContainerPadding();
 
@@ -218,6 +223,306 @@ export default function CareerMappingScreen({ onNavigate }) {
       ]
     }
   ];
+
+  // Available states from our data
+  const availableStates = Object.keys(stateCollegesData).map(key => ({
+    id: key,
+    name: stateCollegesData[key].stateName,
+    collegeCount: stateCollegesData[key].colleges.length
+  }));
+
+  const renderMainMenu = () => (
+    <View>
+      {/* Main Navigation Cards */}
+      <View className='mb-6'>
+        <TouchableOpacity
+          onPress={() => setCurrentView('streams')}
+          className='bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-6 mb-4'
+        >
+          <View className='flex-row items-center'>
+            <Text style={{ fontSize: isTablet() ? 32 : 24 }}>🎯</Text>
+            <View className='ml-4 flex-1'>
+              <Text 
+                className='text-white font-bold mb-1'
+                style={{ fontSize: isTablet() ? 20 : 18 }}
+              >
+                Career Streams Explorer
+              </Text>
+              <Text 
+                className='text-blue-100'
+                style={{ fontSize: isTablet() ? 14 : 12 }}
+              >
+                Explore career paths for Science, Commerce & Arts
+              </Text>
+            </View>
+            <Text 
+              className='text-white'
+              style={{ fontSize: isTablet() ? 16 : 14 }}
+            >
+              →
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => setCurrentView('colleges')}
+          className='bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl p-6 mb-4'
+        >
+          <View className='flex-row items-center'>
+            <Text style={{ fontSize: isTablet() ? 32 : 24 }}>🏛️</Text>
+            <View className='ml-4 flex-1'>
+              <Text 
+                className='text-white font-bold mb-1'
+                style={{ fontSize: isTablet() ? 20 : 18 }}
+              >
+                Government Colleges
+              </Text>
+              <Text 
+                className='text-green-100'
+                style={{ fontSize: isTablet() ? 14 : 12 }}
+              >
+                State-wise government college database
+              </Text>
+            </View>
+            <View className='items-center'>
+              <Text 
+                className='text-white font-bold'
+                style={{ fontSize: isTablet() ? 16 : 14 }}
+              >
+                {Object.keys(stateCollegesData).length}
+              </Text>
+              <Text 
+                className='text-green-100'
+                style={{ fontSize: isTablet() ? 10 : 8 }}
+              >
+                States
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => setCurrentView('scholarships')}
+          className='bg-gradient-to-r from-yellow-500 to-orange-600 rounded-2xl p-6'
+        >
+          <View className='flex-row items-center'>
+            <Text style={{ fontSize: isTablet() ? 32 : 24 }}>💰</Text>
+            <View className='ml-4 flex-1'>
+              <Text 
+                className='text-white font-bold mb-1'
+                style={{ fontSize: isTablet() ? 20 : 18 }}
+              >
+                Scholarship Portal
+              </Text>
+              <Text 
+                className='text-yellow-100'
+                style={{ fontSize: isTablet() ? 14 : 12 }}
+              >
+                Financial assistance & scholarship opportunities
+              </Text>
+            </View>
+            <Text 
+              className='text-white'
+              style={{ fontSize: isTablet() ? 16 : 14 }}
+            >
+              →
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      {/* Quick Stats */}
+      <View className='bg-white border border-gray-200 rounded-2xl p-4'>
+        <Text 
+          className='font-bold mb-3'
+          style={{ fontSize: isTablet() ? 18 : 16 }}
+        >
+          Career Statistics
+        </Text>
+        <View className='flex-row justify-between'>
+          <View className='items-center'>
+            <Text 
+              className='font-bold text-cyan-600'
+              style={{ fontSize: isTablet() ? 20 : 18 }}
+            >
+              50+
+            </Text>
+            <Text 
+              className='text-gray-600'
+              style={{ fontSize: isTablet() ? 12 : 10 }}
+            >
+              Career Options
+            </Text>
+          </View>
+          <View className='items-center'>
+            <Text 
+              className='font-bold text-cyan-600'
+              style={{ fontSize: isTablet() ? 20 : 18 }}
+            >
+              {Object.keys(stateCollegesData).reduce((total, state) => 
+                total + stateCollegesData[state].colleges.length, 0)}
+            </Text>
+            <Text 
+              className='text-gray-600'
+              style={{ fontSize: isTablet() ? 12 : 10 }}
+            >
+              Govt Colleges
+            </Text>
+          </View>
+          <View className='items-center'>
+            <Text 
+              className='font-bold text-cyan-600'
+              style={{ fontSize: isTablet() ? 20 : 18 }}
+            >
+              100+
+            </Text>
+            <Text 
+              className='text-gray-600'
+              style={{ fontSize: isTablet() ? 12 : 10 }}
+            >
+              Scholarships
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+
+  const renderStateColleges = () => (
+    <View>
+      <View className='flex-row items-center mb-4'>
+        <TouchableOpacity onPress={() => setCurrentView('main')}>
+          <Text style={{ fontSize: isTablet() ? 24 : 20 }}>←</Text>
+        </TouchableOpacity>
+        <Text 
+          className='font-extrabold ml-3'
+          style={{ fontSize: isTablet() ? 24 : 20 }}
+        >
+          Government Colleges by State
+        </Text>
+      </View>
+      
+      <Text 
+        className='text-gray-600 mb-6'
+        style={{ fontSize: isTablet() ? 16 : 14 }}
+      >
+        Select your state to explore government colleges
+      </Text>
+
+      {availableStates.map((state) => (
+        <TouchableOpacity
+          key={state.id}
+          onPress={() => {
+            setSelectedState(state.id);
+            setShowStateColleges(true);
+          }}
+          className='bg-white border border-gray-200 rounded-2xl p-4 mb-4'
+        >
+          <View className='flex-row items-center justify-between'>
+            <View className='flex-1'>
+              <Text 
+                className='font-bold mb-1'
+                style={{ fontSize: isTablet() ? 18 : 16 }}
+              >
+                {state.name}
+              </Text>
+              <Text 
+                className='text-gray-600'
+                style={{ fontSize: isTablet() ? 14 : 12 }}
+              >
+                {state.collegeCount} Government Colleges
+              </Text>
+            </View>
+            <View className='items-center'>
+              <Text 
+                className='font-bold text-green-600'
+                style={{ fontSize: isTablet() ? 20 : 18 }}
+              >
+                {state.collegeCount}
+              </Text>
+              <Text 
+                className='text-gray-500'
+                style={{ fontSize: isTablet() ? 10 : 8 }}
+              >
+                Colleges
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+
+  const renderScholarships = () => (
+    <View>
+      <View className='flex-row items-center mb-4'>
+        <TouchableOpacity onPress={() => setCurrentView('main')}>
+          <Text style={{ fontSize: isTablet() ? 24 : 20 }}>←</Text>
+        </TouchableOpacity>
+        <Text 
+          className='font-extrabold ml-3'
+          style={{ fontSize: isTablet() ? 24 : 20 }}
+        >
+          Scholarship Portal
+        </Text>
+      </View>
+
+      <Text 
+        className='text-gray-600 mb-6'
+        style={{ fontSize: isTablet() ? 16 : 14 }}
+      >
+        Explore scholarships available after Class 12
+      </Text>
+
+      {Object.entries(scholarshipData).map(([key, data]) => (
+        <View key={key} className='bg-white border border-gray-200 rounded-2xl p-4 mb-4'>
+          <Text 
+            className='font-bold mb-3'
+            style={{ fontSize: isTablet() ? 18 : 16 }}
+          >
+            💰 {data.name}
+          </Text>
+          
+          {data.scholarships.map((scholarship, index) => (
+            <View key={index} className='bg-gray-50 rounded-xl p-3 mb-3'>
+              <Text 
+                className='font-semibold mb-2'
+                style={{ fontSize: isTablet() ? 16 : 14 }}
+              >
+                {scholarship.name}
+              </Text>
+              
+              <View className='space-y-1'>
+                <Text 
+                  className='text-gray-700'
+                  style={{ fontSize: isTablet() ? 14 : 12 }}
+                >
+                  <Text className='font-semibold'>Eligibility: </Text>
+                  {scholarship.eligibility}
+                </Text>
+                
+                <Text 
+                  className='text-green-600 font-semibold'
+                  style={{ fontSize: isTablet() ? 14 : 12 }}
+                >
+                  <Text className='text-gray-700 font-semibold'>Amount: </Text>
+                  {scholarship.amount}
+                </Text>
+                
+                <Text 
+                  className='text-blue-600'
+                  style={{ fontSize: isTablet() ? 14 : 12 }}
+                >
+                  <Text className='text-gray-700 font-semibold'>Duration: </Text>
+                  {scholarship.duration}
+                </Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      ))}
+    </View>
+  );
 
   const renderStreamCard = (stream) => (
     <TouchableOpacity
@@ -571,30 +876,127 @@ export default function CareerMappingScreen({ onNavigate }) {
     );
   };
 
-  return (
-    <SafeAreaView className='flex-1 bg-gray-50'>
-      <StatusBar style="dark" />
-      
-      {/* Header */}
-      <View className='bg-cyan-500 px-4 py-4'>
-        <View className='flex-row items-center justify-between'>
-          <TouchableOpacity onPress={() => onNavigate && onNavigate('class10')}>
-            <Text style={{ fontSize: isTablet() ? 24 : 20 }} className='text-white'>←</Text>
-          </TouchableOpacity>
-          <View className='flex-row items-center'>
-            <Text style={{ fontSize: isTablet() ? 24 : 20 }}>🗺️</Text>
+  const renderStateCollegeDetails = () => {
+    if (!selectedState || !stateCollegesData[selectedState]) return null;
+
+    const stateData = stateCollegesData[selectedState];
+
+    return (
+      <ScrollView 
+        className='flex-1' 
+        contentContainerStyle={{ paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ paddingHorizontal: containerPadding, marginTop: 24 }}>
+          <View className='flex-row items-center mb-4'>
+            <TouchableOpacity onPress={() => setShowStateColleges(false)}>
+              <Text style={{ fontSize: isTablet() ? 24 : 20 }}>←</Text>
+            </TouchableOpacity>
             <Text 
-              className='text-white font-bold ml-2'
-              style={{ fontSize: isTablet() ? 20 : 18 }}
+              className='font-extrabold ml-3'
+              style={{ fontSize: isTablet() ? 24 : 20 }}
             >
-              Career Mapping
+              {stateData.stateName} Colleges
             </Text>
           </View>
-          <View style={{ width: 24 }} />
-        </View>
-      </View>
 
-      {showCareerDetails ? (
+          <Text 
+            className='text-gray-600 mb-6'
+            style={{ fontSize: isTablet() ? 16 : 14 }}
+          >
+            Top government colleges in {stateData.stateName}
+          </Text>
+
+          {stateData.colleges.map((college) => (
+            <View key={college.id} className='bg-white border border-gray-200 rounded-2xl p-4 mb-4'>
+              <View className='mb-4'>
+                <Text 
+                  className='font-bold mb-2'
+                  style={{ fontSize: isTablet() ? 18 : 16 }}
+                >
+                  {college.name}
+                </Text>
+                <View className='flex-row items-center justify-between mb-2'>
+                  <Text 
+                    className='text-gray-600'
+                    style={{ fontSize: isTablet() ? 14 : 12 }}
+                  >
+                    📍 {college.location} • Est. {college.established}
+                  </Text>
+                  <View className='bg-green-100 px-2 py-1 rounded'>
+                    <Text 
+                      className='text-green-700 font-semibold'
+                      style={{ fontSize: isTablet() ? 12 : 10 }}
+                    >
+                      {college.rating}
+                    </Text>
+                  </View>
+                </View>
+                <Text 
+                  className='text-blue-600 font-semibold'
+                  style={{ fontSize: isTablet() ? 12 : 10 }}
+                >
+                  {college.rank}
+                </Text>
+              </View>
+
+              <Text 
+                className='font-semibold mb-3'
+                style={{ fontSize: isTablet() ? 16 : 14 }}
+              >
+                📚 Courses Offered:
+              </Text>
+
+              {college.courses.map((course, index) => (
+                <View key={index} className='bg-gray-50 rounded-xl p-3 mb-3'>
+                  <Text 
+                    className='font-semibold mb-2'
+                    style={{ fontSize: isTablet() ? 16 : 14 }}
+                  >
+                    {course.name}
+                  </Text>
+                  <View className='space-y-1'>
+                    <Text 
+                      className='text-gray-700'
+                      style={{ fontSize: isTablet() ? 14 : 12 }}
+                    >
+                      <Text className='font-semibold'>Duration: </Text>
+                      {course.duration}
+                    </Text>
+                    <Text 
+                      className='text-green-600'
+                      style={{ fontSize: isTablet() ? 14 : 12 }}
+                    >
+                      <Text className='text-gray-700 font-semibold'>Fees: </Text>
+                      {course.fees}
+                    </Text>
+                    <Text 
+                      className='text-blue-600'
+                      style={{ fontSize: isTablet() ? 14 : 12 }}
+                    >
+                      <Text className='text-gray-700 font-semibold'>Eligibility: </Text>
+                      {course.eligibility}
+                    </Text>
+                    <Text 
+                      className='text-purple-600'
+                      style={{ fontSize: isTablet() ? 14 : 12 }}
+                    >
+                      <Text className='text-gray-700 font-semibold'>Total Seats: </Text>
+                      {course.seats}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    );
+  };
+
+  const getCurrentContent = () => {
+    if (showCareerDetails) {
+      return (
         <ScrollView 
           className='flex-1' 
           contentContainerStyle={{ paddingBottom: 100 }}
@@ -602,7 +1004,15 @@ export default function CareerMappingScreen({ onNavigate }) {
         >
           {renderCareerDetails()}
         </ScrollView>
-      ) : selectedStream ? (
+      );
+    }
+
+    if (showStateColleges) {
+      return renderStateCollegeDetails();
+    }
+
+    if (selectedStream) {
+      return (
         <ScrollView 
           className='flex-1' 
           contentContainerStyle={{ paddingBottom: 100 }}
@@ -630,84 +1040,71 @@ export default function CareerMappingScreen({ onNavigate }) {
             {selectedStream.careers.map(renderCareerCard)}
           </View>
         </ScrollView>
-      ) : (
-        <ScrollView 
-          className='flex-1' 
-          contentContainerStyle={{ paddingBottom: 100 }}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={{ paddingHorizontal: containerPadding, marginTop: 24 }}>
-            <Text 
-              className='font-extrabold mb-2'
-              style={{ fontSize: isTablet() ? 24 : 20 }}
-            >
-              Choose Your Stream
-            </Text>
-            <Text 
-              className='text-gray-600 mb-6'
-              style={{ fontSize: isTablet() ? 16 : 14 }}
-            >
-              Explore career paths for each stream after Class 10
-            </Text>
-            
-            {streams.map(renderStreamCard)}
-            
-            {/* Quick Stats */}
-            <View className='bg-white border border-gray-200 rounded-2xl p-4 mt-6'>
-              <Text 
-                className='font-bold mb-3'
-                style={{ fontSize: isTablet() ? 18 : 16 }}
-              >
-                Career Statistics
-              </Text>
-              <View className='flex-row justify-between'>
-                <View className='items-center'>
-                  <Text 
-                    className='font-bold text-cyan-600'
-                    style={{ fontSize: isTablet() ? 20 : 18 }}
-                  >
-                    50+
-                  </Text>
-                  <Text 
-                    className='text-gray-600'
-                    style={{ fontSize: isTablet() ? 12 : 10 }}
-                  >
-                    Career Options
-                  </Text>
-                </View>
-                <View className='items-center'>
-                  <Text 
-                    className='font-bold text-cyan-600'
-                    style={{ fontSize: isTablet() ? 20 : 18 }}
-                  >
-                    3
-                  </Text>
-                  <Text 
-                    className='text-gray-600'
-                    style={{ fontSize: isTablet() ? 12 : 10 }}
-                  >
-                    Main Streams
-                  </Text>
-                </View>
-                <View className='items-center'>
-                  <Text 
-                    className='font-bold text-cyan-600'
-                    style={{ fontSize: isTablet() ? 20 : 18 }}
-                  >
-                    100+
-                  </Text>
-                  <Text 
-                    className='text-gray-600'
-                    style={{ fontSize: isTablet() ? 12 : 10 }}
-                  >
-                    Entrance Exams
-                  </Text>
-                </View>
+      );
+    }
+
+    return (
+      <ScrollView 
+        className='flex-1' 
+        contentContainerStyle={{ paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ paddingHorizontal: containerPadding, marginTop: 24 }}>
+          {currentView === 'main' && renderMainMenu()}
+          {currentView === 'streams' && (
+            <>
+              <View className='flex-row items-center mb-4'>
+                <TouchableOpacity onPress={() => setCurrentView('main')}>
+                  <Text style={{ fontSize: isTablet() ? 24 : 20 }}>←</Text>
+                </TouchableOpacity>
+                <Text 
+                  className='font-extrabold ml-3'
+                  style={{ fontSize: isTablet() ? 24 : 20 }}
+                >
+                  Choose Your Stream
+                </Text>
               </View>
-            </View>
+              <Text 
+                className='text-gray-600 mb-6'
+                style={{ fontSize: isTablet() ? 16 : 14 }}
+              >
+                Explore career paths for each stream after Class 10
+              </Text>
+              
+              {streams.map(renderStreamCard)}
+            </>
+          )}
+          {currentView === 'colleges' && renderStateColleges()}
+          {currentView === 'scholarships' && renderScholarships()}
+        </View>
+      </ScrollView>
+    );
+  };
+
+  return (
+    <SafeAreaView className='flex-1 bg-gray-50'>
+      <StatusBar style="dark" />
+      
+      {/* Header */}
+      <View className='bg-cyan-500 px-4 py-4'>
+        <View className='flex-row items-center justify-between'>
+          <TouchableOpacity onPress={() => onNavigate && onNavigate('class10')}>
+            <Text style={{ fontSize: isTablet() ? 24 : 20 }} className='text-white'>←</Text>
+          </TouchableOpacity>
+          <View className='flex-row items-center'>
+            <Text style={{ fontSize: isTablet() ? 24 : 20 }}>🗺️</Text>
+            <Text 
+              className='text-white font-bold ml-2'
+              style={{ fontSize: isTablet() ? 20 : 18 }}
+            >
+              Career Mapping
+            </Text>
           </View>
-        </ScrollView>
-      )}
+          <View style={{ width: 24 }} />
+        </View>
+      </View>
+
+      {getCurrentContent()}
 
       {/* Back Button for Career Details */}
       {showCareerDetails && (

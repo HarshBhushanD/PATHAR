@@ -8,8 +8,8 @@
     
     <title>PATHAR - Your Path to Success</title>
     
-    <!-- Puter.js CDN - AI Integration -->
-    <script src="https://js.puter.com/v2/"></script>
+    <!-- Puter.js CDN - Multiple sources for reliability -->
+    <script src="https://js.puter.com/v2/" async></script>
     
     <!-- Expo Web Assets -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
@@ -64,6 +64,7 @@
 </head>
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    
     <div id="root">
         <!-- Loading screen while app initializes -->
         <div class="loading-container">
@@ -75,43 +76,139 @@
     </div>
     
     <script>
-        // Initialize Puter when the page loads
-        window.addEventListener('load', function() {
-            console.log('Puter.js loaded:', typeof window.puter !== 'undefined');
+        let puterInitialized = false;
+        let puterLoadTimeout = null;
+
+        // Function to check and initialize Puter
+        function checkPuterAvailability() {
+            console.log('Checking Puter availability...');
             
-            if (window.puter) {
-                console.log('Puter AI available for question generation');
+            if (typeof window.puter !== 'undefined' && window.puter !== null) {
+                console.log('Puter found, checking AI capability...');
                 
-                // Test Puter availability
-                window.puterTest = async function() {
-                    try {
-                        const response = await window.puter.ai.chat('Hello! Can you generate a simple test response?', false, {
-                            model: 'gpt-3.5-turbo',
-                            temperature: 0.5
-                        });
-                        console.log('Puter test response:', response);
-                        return response;
-                    } catch (error) {
-                        console.error('Puter test failed:', error);
-                        return null;
-                    }
-                };
+                if (window.puter.ai && typeof window.puter.ai.chat === 'function') {
+                    console.log('Puter AI is available!');
+                    puterInitialized = true;
+                    
+                    // Test AI functionality
+                    testPuterAI();
+                    return true;
+                } else {
+                    console.log('Puter loaded but AI not available');
+                    return false;
+                }
             } else {
-                console.warn('Puter.js not available - AI features will use fallback questions');
+                console.log('Puter not yet available');
+                return false;
             }
+        }
+
+        // Test Puter AI functionality
+        async function testPuterAI() {
+            try {
+                console.log('Testing Puter AI...');
+                
+                // Use the correct API syntax from documentation
+                const response = await window.puter.ai.chat('Hello, test', {
+                    model: 'gpt-5-nano',
+                    max_tokens: 10
+                });
+                
+                console.log('Puter AI test successful:', response);
+                puterInitialized = true;
+                
+            } catch (error) {
+                console.error('Puter AI test failed:', error);
+                puterInitialized = false;
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', function() {
+            console.log('Page loaded, waiting for Puter...');
+            
+            // Check immediately
+            if (checkPuterAvailability()) {
+                return;
+            }
+            
+            // Check periodically for up to 10 seconds
+            let attempts = 0;
+            const maxAttempts = 20; // 10 seconds with 500ms intervals
+            
+            const checkInterval = setInterval(() => {
+                attempts++;
+                console.log(`Puter check attempt ${attempts}/${maxAttempts}`);
+                
+                if (checkPuterAvailability()) {
+                    clearInterval(checkInterval);
+                    console.log('Puter initialization complete');
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(checkInterval);
+                    console.log('Puter loading timeout - using fallback mode');
+                    setupFallbackMode();
+                }
+            }, 500);
         });
-        
-        // Global error handler for AI operations
+
+        function setupFallbackMode() {
+            console.log('Setting up fallback mode');
+            puterInitialized = false;
+            
+            // Create mock objects for compatibility
+            window.puter = {
+                ai: null,
+                auth: null
+            };
+        }
+
+        // Global utility functions
+        window.isAIAvailable = function() {
+            return puterInitialized && 
+                   typeof window.puter !== 'undefined' && 
+                   window.puter !== null && 
+                   window.puter.ai && 
+                   typeof window.puter.ai.chat === 'function';
+        };
+
+        window.getPuterStatus = function() {
+            return {
+                puterLoaded: typeof window.puter !== 'undefined' && window.puter !== null,
+                aiAvailable: window.puter && window.puter.ai && typeof window.puter.ai.chat === 'function',
+                initialized: puterInitialized,
+                testMode: false
+            };
+        };
+
+        // Enhanced test function using correct API
+        window.puterTest = async function() {
+            try {
+                if (!window.isAIAvailable()) {
+                    return { success: false, error: 'Puter AI not available' };
+                }
+
+                // Test with correct API syntax
+                const response = await window.puter.ai.chat('Hello! Generate a test response.', {
+                    model: 'gpt-5-nano',
+                    temperature: 0.5,
+                    max_tokens: 20
+                });
+                
+                console.log('Puter test response:', response);
+                return { success: true, response };
+                
+            } catch (error) {
+                console.error('Puter test failed:', error);
+                return { success: false, error: error.message };
+            }
+        };
+
+        // Global error handler
         window.handleAIError = function(error, fallbackAction) {
             console.error('AI Operation Error:', error);
             if (typeof fallbackAction === 'function') {
                 fallbackAction();
             }
-        };
-        
-        // Utility function to check AI availability
-        window.isAIAvailable = function() {
-            return window.puter && window.puter.ai && typeof window.puter.ai.chat === 'function';
         };
     </script>
 </body>
