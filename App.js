@@ -84,7 +84,7 @@ function AppContent() {
   }
 
   // Handle navigation between screens
-  const handleNavigation = (screenName) => {
+  const handleNavigation = (screenName, params = {}) => {
     if (screenName) {
       setCurrentScreen(screenName);
     } else {
@@ -121,7 +121,21 @@ function AppContent() {
       case 'streamDiscovery':
         return <StreamDiscoveryScreen onNavigate={handleNavigation} />;
       case 'smartMentor':
-        return <SmartMentorScreen onNavigate={handleNavigation} />;
+        // Determine student class based on user type for Smart Mentor
+        const getStudentClass = () => {
+          if (user && user.studentType) {
+            return user.studentType;
+          }
+          // Default based on current user screen
+          const userScreen = getUserScreen();
+          switch (userScreen) {
+            case 'class10': return '10th';
+            case 'class12': return '12th';
+            case 'collegeStudent': return 'college';
+            default: return '10th';
+          }
+        };
+        return <SmartMentorScreen onNavigate={handleNavigation} studentClass={getStudentClass()} />;
       case 'boardMastery':
         return <BoardMasteryScreen onNavigate={handleNavigation} />;
       case 'studyArchitect':
