@@ -330,7 +330,7 @@ export default function BoardMasteryScreen({ onNavigate }) {
       <StatusBar style="dark" />
       
       {/* Header */}
-      <View className='bg-purple-500 px-4 py-4'>
+      <View className='bg-purple-500 px-4 py-4 mt-10'>
         <View className='flex-row items-center justify-between'>
           <TouchableOpacity onPress={() => onNavigate && onNavigate('class10')}>
             <Text style={{ fontSize: isTablet() ? 24 : 20 }} className='text-white'>←</Text>
