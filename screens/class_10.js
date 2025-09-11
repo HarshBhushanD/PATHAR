@@ -70,26 +70,6 @@ export default function Class10Screen({ onNavigate }) {
                   PATHAR - Class 10
                 </Text>
               </View>
-              <View className={`${isTablet() ? 'mt-8' : 'mt-6'}`}>
-                <Text 
-                  className='text-white font-extrabold leading-tight'
-                  style={{ 
-                    fontSize: isTablet() ? 36 : isLargePhone() ? 32 : 28,
-                    maxWidth: isTablet() ? wp(70) : '100%'
-                  }}
-                >
-                  Your Complete Class 10th Journey
-                </Text>
-                <Text 
-                  className='text-white/90 mt-2'
-                  style={{ 
-                    fontSize: isTablet() ? 18 : isLargePhone() ? 16 : 15,
-                    maxWidth: isTablet() ? wp(65) : '100%'
-                  }}
-                >
-                  AI-powered stream discovery, smart mentoring, study planning, and career guidance - all in one place.
-                </Text>
-              </View>
               <View className={`${isTablet() ? 'mt-8' : 'mt-5'} ${isTablet() ? 'flex-row' : 'flex-col'}`}>
                 <TouchableOpacity
                   onPress={onPrimaryCta}
@@ -125,7 +105,7 @@ export default function Class10Screen({ onNavigate }) {
         </View>
 
         {/* Impact badges */}
-        <View style={{ paddingHorizontal: containerPadding, marginTop: -24 }}>
+        <View style={{ paddingHorizontal: containerPadding, marginTop: -40 }}>
           <View className='bg-white rounded-2xl shadow-md shadow-black/10 border border-black/5' style={{ padding: isTablet() ? 24 : 16 }}>
             <View className={`flex-row justify-between ${isTablet() ? 'px-4' : ''}`}>
               <View className='items-center flex-1'>
@@ -176,7 +156,7 @@ export default function Class10Screen({ onNavigate }) {
               title='Smart Mentor'
               subtitle='Personal AI career guide available 24/7'
               color='bg-blue-50'
-              onPress={() => onNavigate && onNavigate('smartMentor')}
+              onPress={() => onNavigate && onNavigate('smartMentor', { studentClass: '10th' })}
             />
             <FeatureCard
               emoji='📚'
