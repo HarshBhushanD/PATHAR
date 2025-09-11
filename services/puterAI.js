@@ -11,7 +11,9 @@ export const generateAptitudeQuestions = async (studentType = '12th', questionCo
   try {
     // Check if Puter is available (web environment)
     if (typeof window === 'undefined' || !window.puter) {
-      console.log('Puter AI not available, using fallback questions');
+      if (__DEV__) {
+        console.debug('Puter AI not available; falling back to default questions');
+      }
       return null;
     }
 
@@ -82,7 +84,9 @@ Requirements:
 
 Return only the JSON array, no additional text or formatting.`;
 
-    console.log('Calling Puter AI for question generation...');
+    if (__DEV__) {
+      console.debug('Calling Puter AI for question generation...');
+    }
     
     const response = await window.puter.ai.chat(prompt, false, {
       model: 'gpt-4',
@@ -114,22 +118,34 @@ Return only the JSON array, no additional text or formatting.`;
             );
             
             if (isValid) {
-              console.log(`Successfully generated ${questionCount} questions with Puter AI`);
+              if (__DEV__) {
+                console.debug(`Successfully generated ${questionCount} questions with Puter AI`);
+              }
               return generatedQuestions;
             } else {
-              console.log('Generated questions failed validation');
+              if (__DEV__) {
+                console.debug('Generated questions failed validation');
+              }
             }
           } else {
-            console.log(`Expected ${questionCount} questions, got ${generatedQuestions?.length || 0}`);
+            if (__DEV__) {
+              console.debug(`Expected ${questionCount} questions, got ${generatedQuestions?.length || 0}`);
+            }
           }
         } else {
-          console.log('Could not extract JSON from response');
+          if (__DEV__) {
+            console.debug('Could not extract JSON from response');
+          }
         }
       } catch (parseError) {
-        console.log('Error parsing AI response:', parseError);
+        if (__DEV__) {
+          console.debug('Error parsing AI response:', parseError);
+        }
       }
     } else {
-      console.log('No valid response from Puter AI');
+      if (__DEV__) {
+        console.debug('No valid response from Puter AI');
+      }
     }
 
     return null;

@@ -44,15 +44,18 @@ export default function Aptitude10Screen() {
       
       if (aiQuestions && aiQuestions.length === 10) {
         setQuestions(aiQuestions);
-        console.log('Successfully loaded AI-generated questions for Class 10th');
+        if (__DEV__) {
+          console.debug('Loaded AI-generated questions for Class 10th');
+        }
       } else {
         // Fallback to default questions
-        console.log('Using default Class 10th questions as fallback');
         setQuestions(getDefaultQuestions('10th'));
       }
       
     } catch (error) {
-      console.log('Error generating Class 10th questions:', error);
+      if (__DEV__) {
+        console.debug('Error generating Class 10th questions:', error);
+      }
       setQuestions(getDefaultQuestions('10th'));
     } finally {
       setGeneratingQuestions(false);
