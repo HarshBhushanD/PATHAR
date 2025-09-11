@@ -78,7 +78,7 @@ export default function Class10Screen({ onNavigate }) {
                     maxWidth: isTablet() ? wp(70) : '100%'
                   }}
                 >
-                  Your Career Journey Starts Here
+                  Your Complete Class 10th Journey
                 </Text>
                 <Text 
                   className='text-white/90 mt-2'
@@ -87,7 +87,7 @@ export default function Class10Screen({ onNavigate }) {
                     maxWidth: isTablet() ? wp(65) : '100%'
                   }}
                 >
-                  Explore streams and career paths after completing Class 10 in Jammu & Kashmir.
+                  AI-powered stream discovery, smart mentoring, study planning, and career guidance - all in one place.
                 </Text>
               </View>
               <View className={`${isTablet() ? 'mt-8' : 'mt-5'} ${isTablet() ? 'flex-row' : 'flex-col'}`}>
@@ -129,21 +129,21 @@ export default function Class10Screen({ onNavigate }) {
           <View className='bg-white rounded-2xl shadow-md shadow-black/10 border border-black/5' style={{ padding: isTablet() ? 24 : 16 }}>
             <View className={`flex-row justify-between ${isTablet() ? 'px-4' : ''}`}>
               <View className='items-center flex-1'>
-                <Text style={{ fontSize: isTablet() ? 32 : 24 }} className='font-extrabold text-emerald-600'>↑</Text>
-                <Text style={{ fontSize: isTablet() ? 18 : 16 }} className='font-semibold'>Enrollment</Text>
-                <Text style={{ fontSize: isTablet() ? 14 : 12 }} className='text-gray-500'>Informed choices</Text>
+                <Text style={{ fontSize: isTablet() ? 32 : 24 }} className='font-extrabold text-emerald-600'>95%</Text>
+                <Text style={{ fontSize: isTablet() ? 18 : 16 }} className='font-semibold'>Accuracy</Text>
+                <Text style={{ fontSize: isTablet() ? 14 : 12 }} className='text-gray-500'>Stream suggestions</Text>
               </View>
               <View className='w-px bg-gray-200 mx-3' />
               <View className='items-center flex-1'>
-                <Text style={{ fontSize: isTablet() ? 32 : 24 }} className='font-extrabold text-emerald-600'>✓</Text>
-                <Text style={{ fontSize: isTablet() ? 18 : 16 }} className='font-semibold'>Retention</Text>
-                <Text style={{ fontSize: isTablet() ? 14 : 12 }} className='text-gray-500'>Fewer dropouts</Text>
+                <Text style={{ fontSize: isTablet() ? 32 : 24 }} className='font-extrabold text-emerald-600'>3x</Text>
+                <Text style={{ fontSize: isTablet() ? 18 : 16 }} className='font-semibold'>Efficiency</Text>
+                <Text style={{ fontSize: isTablet() ? 14 : 12 }} className='text-gray-500'>Study planning</Text>
               </View>
               <View className='w-px bg-gray-200 mx-3' />
               <View className='items-center flex-1'>
-                <Text style={{ fontSize: isTablet() ? 32 : 24 }} className='font-extrabold text-emerald-600'>🎯</Text>
-                <Text style={{ fontSize: isTablet() ? 18 : 16 }} className='font-semibold'>Outcomes</Text>
-                <Text style={{ fontSize: isTablet() ? 14 : 12 }} className='text-gray-500'>Career‑aligned</Text>
+                <Text style={{ fontSize: isTablet() ? 32 : 24 }} className='font-extrabold text-emerald-600'>10K+</Text>
+                <Text style={{ fontSize: isTablet() ? 18 : 16 }} className='font-semibold'>Students</Text>
+                <Text style={{ fontSize: isTablet() ? 14 : 12 }} className='text-gray-500'>Peer network</Text>
               </View>
             </View>
           </View>
@@ -155,32 +155,84 @@ export default function Class10Screen({ onNavigate }) {
             className='font-extrabold'
             style={{ fontSize: isTablet() ? 24 : 20 }}
           >
-            Explore Features
+            Class 10th Journey Features
+          </Text>
+          <Text 
+            className='text-gray-600 mt-1'
+            style={{ fontSize: isTablet() ? 16 : 14 }}
+          >
+            Everything you need for your career journey after Class 10
           </Text>
           <View className={`mt-4 flex-row flex-wrap ${isTablet() ? '-mx-3' : '-mx-2'}`}>
             <FeatureCard
-              emoji='🧭'
-              title='Aptitude & Interest'
-              subtitle='Short quiz to discover the right stream'
+              emoji='🔍'
+              title='Stream Discovery'
+              subtitle='AI-powered stream recommendation (95% accurate)'
               color='bg-emerald-50'
+              onPress={() => onNavigate && onNavigate('streamDiscovery')}
+            />
+            <FeatureCard
+              emoji='🤖'
+              title='Smart Mentor'
+              subtitle='Personal AI career guide available 24/7'
+              color='bg-blue-50'
+              onPress={() => onNavigate && onNavigate('smartMentor')}
+            />
+            <FeatureCard
+              emoji='📚'
+              title='Board Mastery'
+              subtitle='Identify weak areas & get practice questions'
+              color='bg-purple-50'
+              onPress={() => onNavigate && onNavigate('boardMastery')}
+            />
+            <FeatureCard
+              emoji='📅'
+              title='Study Architect'
+              subtitle='AI timetable maker for 3x efficiency'
+              color='bg-orange-50'
+              onPress={() => onNavigate && onNavigate('studyArchitect')}
+            />
+            <FeatureCard
+              emoji='📊'
+              title='Subject Analytics'
+              subtitle='Detailed progress tracking for each subject'
+              color='bg-indigo-50'
+              onPress={() => onNavigate && onNavigate('subjectAnalytics')}
+            />
+            <FeatureCard
+              emoji='👥'
+              title='Peer Network'
+              subtitle='Connect with 10,000+ students across India'
+              color='bg-pink-50'
+              onPress={() => onNavigate && onNavigate('peerNetwork')}
+            />
+            <FeatureCard
+              emoji='🧭'
+              title='Aptitude Quiz'
+              subtitle='Fun quizzes to discover your strengths'
+              color='bg-teal-50'
+              onPress={onPrimaryCta}
             />
             <FeatureCard
               emoji='🗺️'
-              title='Course → Career Map'
-              subtitle='See jobs, exams, higher studies for each degree'
-              color='bg-sky-50'
+              title='Career Mapping'
+              subtitle='See career paths for each stream'
+              color='bg-cyan-50'
+              onPress={() => onNavigate && onNavigate('careerMapping')}
             />
             <FeatureCard
               emoji='🏫'
-              title='Nearby Govt. Colleges'
-              subtitle='Programs, cut‑offs, facilities, medium'
+              title='School Directory'
+              subtitle='Find schools, programs & facilities nearby'
               color='bg-amber-50'
+              onPress={() => onNavigate && onNavigate('colleges')}
             />
             <FeatureCard
               emoji='⏰'
               title='Timeline Tracker'
-              subtitle='Admissions, scholarships, tests — never miss a date'
+              subtitle='Never miss important dates & deadlines'
               color='bg-rose-50'
+              onPress={() => onNavigate && onNavigate('timelineTracker')}
             />
           </View>
         </View>
@@ -294,7 +346,7 @@ export default function Class10Screen({ onNavigate }) {
   );
 }
 
-function FeatureCard({ emoji, title, subtitle, color }) {
+function FeatureCard({ emoji, title, subtitle, color, onPress }) {
   const cardWidth = isTablet() ? '33.33%' : '50%';
   const cardPadding = isTablet() ? 12 : 8;
   
@@ -303,9 +355,11 @@ function FeatureCard({ emoji, title, subtitle, color }) {
       className={isTablet() ? 'px-3 mb-6' : 'px-2 mb-4'}
       style={{ width: cardWidth }}
     >
-      <View 
-        className={`rounded-2xl ${color} border border-black/5`}
+      <TouchableOpacity 
+        onPress={onPress}
+        className={`rounded-2xl ${color} border border-black/5 active:scale-95`}
         style={{ padding: isTablet() ? 20 : 16 }}
+        activeOpacity={0.8}
       >
         <Text style={{ fontSize: isTablet() ? 32 : 24 }}>{emoji}</Text>
         <Text 
@@ -320,7 +374,7 @@ function FeatureCard({ emoji, title, subtitle, color }) {
         >
           {subtitle}
         </Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }

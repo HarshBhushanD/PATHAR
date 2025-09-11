@@ -18,6 +18,14 @@ import AptitudeScreen from './screens/aptitude';
 import Aptitude10Screen from './screens/aptitude10';
 import AuthScreen from './screens/Auth';
 import ProfileScreen from './screens/Profile';
+import StreamDiscoveryScreen from './screens/StreamDiscovery';
+import SmartMentorScreen from './screens/SmartMentor';
+import BoardMasteryScreen from './screens/BoardMastery';
+import StudyArchitectScreen from './screens/StudyArchitect';
+import SubjectAnalyticsScreen from './screens/SubjectAnalytics';
+import PeerNetworkScreen from './screens/PeerNetwork';
+import CareerMappingScreen from './screens/CareerMapping';
+import TimelineTrackerScreen from './screens/TimelineTracker';
 
 // Import components
 import BottomNavigation from './components/BottomNavigation';
@@ -110,6 +118,22 @@ function AppContent() {
         return <CollegesScreen />;
       case 'profile':
         return <ProfileScreen />;
+      case 'streamDiscovery':
+        return <StreamDiscoveryScreen onNavigate={handleNavigation} />;
+      case 'smartMentor':
+        return <SmartMentorScreen onNavigate={handleNavigation} />;
+      case 'boardMastery':
+        return <BoardMasteryScreen onNavigate={handleNavigation} />;
+      case 'studyArchitect':
+        return <StudyArchitectScreen onNavigate={handleNavigation} />;
+      case 'subjectAnalytics':
+        return <SubjectAnalyticsScreen onNavigate={handleNavigation} />;
+      case 'peerNetwork':
+        return <PeerNetworkScreen onNavigate={handleNavigation} />;
+      case 'careerMapping':
+        return <CareerMappingScreen onNavigate={handleNavigation} />;
+      case 'timelineTracker':
+        return <TimelineTrackerScreen onNavigate={handleNavigation} />;
       default:
         return renderUserTypeScreen();
     }
