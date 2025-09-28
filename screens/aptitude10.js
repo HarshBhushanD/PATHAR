@@ -93,18 +93,50 @@ export default function Aptitude10Screen() {
     const results = { topCategory, scores, totalQuestions: questions.length };
     setShowResults(results);
 
-    // Save results to Firestore
+    // Save results to Firestore with better error handling
     if (user) {
       try {
-        await saveAptitudeResults(user.uid, {
+        console.log('Saving aptitude results for user:', user.uid);
+        const docRef = await saveAptitudeResults(user.uid, {
           ...results,
           completedAt: new Date().toISOString(),
           studentType: '10th',
           answers: finalAnswers
         });
+        console.log('Aptitude results saved successfully with ID:', docRef.id);
+        
+        // Show success message to user
+        Alert.alert(
+          'Results Saved!', 
+          'Your aptitude test results have been saved successfully.',
+          [{ text: 'OK' }]
+        );
       } catch (error) {
-        console.error('Error saving results:', error);
+        console.error('Failed to save aptitude results:', error);
+        
+        // Show detailed error message to user
+        let errorMessage = 'Failed to save your results. ';
+        if (error.code === 'permission-denied') {
+          errorMessage += 'Please make sure you are logged in and try again.';
+        } else if (error.code === 'unavailable') {
+          errorMessage += 'Network error. Please check your internet connection.';
+        } else {
+          errorMessage += 'Please try again later.';
+        }
+        
+        Alert.alert(
+          'Save Failed', 
+          errorMessage,
+          [{ text: 'OK' }]
+        );
       }
+    } else {
+      console.warn('No user logged in, cannot save results');
+      Alert.alert(
+        'Not Logged In', 
+        'Please log in to save your results.',
+        [{ text: 'OK' }]
+      );
     }
   };
 

@@ -70,15 +70,26 @@ export const updateUserProfile = async (userId, updates) => {
 // Aptitude Test Results
 export const saveAptitudeResults = async (userId, testResults) => {
   try {
+    console.log('Attempting to save aptitude results for user:', userId);
+    console.log('Test results data:', testResults);
+    
     const resultsRef = collection(db, 'aptitudeResults');
     const docRef = await addDoc(resultsRef, {
       userId,
       ...testResults,
       createdAt: serverTimestamp()
     });
+    
+    console.log('Successfully saved aptitude results with ID:', docRef.id);
     return docRef;
   } catch (error) {
-    console.error('Error saving aptitude results:', error);
+    console.error('Detailed error saving aptitude results:', {
+      error: error,
+      code: error.code,
+      message: error.message,
+      userId: userId,
+      testResults: testResults
+    });
     throw error;
   }
 };

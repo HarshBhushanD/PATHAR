@@ -10,6 +10,7 @@ import {
   getUserFavorites,
   trackUserActivity
 } from '../services/firestore';
+import { runAllFirebaseTests } from '../utils/firebaseTest';
 
 export default function DatabaseExample() {
   const { user } = useAuth();
@@ -87,6 +88,25 @@ export default function DatabaseExample() {
     }
   };
 
+  const handleFirebaseTest = async () => {
+    try {
+      Alert.alert('Testing Firebase', 'Running comprehensive Firebase tests...');
+      const results = await runAllFirebaseTests(user);
+      
+      let message = 'Firebase Test Results:\n\n';
+      message += `Connection: ${results.connection.success ? '✅' : '❌'} ${results.connection.message}\n`;
+      message += `Authentication: ${results.auth.success ? '✅' : '❌'} ${results.auth.message}\n`;
+      
+      if (results.aptitudeSave) {
+        message += `Aptitude Save: ${results.aptitudeSave.success ? '✅' : '❌'} ${results.aptitudeSave.message}\n`;
+      }
+      
+      Alert.alert('Firebase Test Results', message);
+    } catch (error) {
+      Alert.alert('Test Error', 'Failed to run Firebase tests: ' + error.message);
+    }
+  };
+
   const handleAddFavorite = async () => {
     try {
       const collegeData = {
@@ -156,6 +176,13 @@ export default function DatabaseExample() {
           className="bg-green-500 py-2 px-4 rounded mt-2"
         >
           <Text className="text-white text-center">Save Test Result</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          onPress={handleFirebaseTest}
+          className="bg-orange-500 py-2 px-4 rounded mt-2"
+        >
+          <Text className="text-white text-center">🔍 Test Firebase Connection</Text>
         </TouchableOpacity>
       </View>
 
