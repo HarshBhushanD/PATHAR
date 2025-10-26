@@ -274,9 +274,10 @@ For support, email support@pathar.app or join our community discussions.
 ---
 
 <div align="center">
-  <p>Made with ❤️ for students by Azman & Harsh</p>
+  <p>Made with ❤️ for students by Azman & Harsh Bhushan</p>
   <p>
     <a href="https://github.com/your-username/pathar-career-guidance">⭐ Star this repo if it helped you!</a>
   </p>
 </div>
+
 
